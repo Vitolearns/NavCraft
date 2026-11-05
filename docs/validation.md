@@ -65,6 +65,12 @@ ROS_DOMAIN_ID=190 python3 scripts/test_lifecycle.py
 
 本次发布检查未重跑 Gazebo、SLAM、跟踪及底盘运行矩阵；上文运行指标属于对应日期的验收。源码快照不包含本机构建、安装目录或运行日志，首次运行需先构建。
 
+## CI 诊断复验（2026-11-05）
+
+调整 CI 安装阶段和失败报告后，在已有 Jazzy 工作区执行 `ROS_DOMAIN_ID=187 bash scripts/test.sh`，退出码 0：108 项 colcon 测试和 37 项 Action/速度保护检查通过。同域执行 `python3 scripts/test_mock_chassis.py`，8 项检查通过，退出码 0。
+
+另核验 Bash 语法、workflow YAML 与安装阶段时限；受控失败分别保留 colcon test 的退出码 17、test-result 的退出码 19，且两种失败都会打印结果、不继续运行 Action 回归。这次本地复验未重新构建或运行 Gazebo，不验证 GitHub runner 的网络与全新依赖安装。云端 CI 结论仍需查看对应提交的运行记录。
+
 ## 结果适用范围
 
 建图验收检查 OccupancyGrid 生成，未评估全场景建图精度。跟踪验收检查运动、急停与唯一速度发布者，未完成公平算法性能比较。Serial、UDP 与 ros2_control 适配不代表实车验证；Docker 构建尚未验证；托管 CI 状态以 [Actions](https://github.com/Vitolearns/NavCraft/actions/workflows/ci.yml) 中对应提交的运行结果为准，覆盖构建、单元、任务故障注入和 mock 底盘，不覆盖 Gazebo 矩阵。仓库指标仅适用于指定路线、障碍和这次运行。

@@ -125,6 +125,6 @@ python3 scripts/check_docs.py
 
 `.github/workflows/ci.yml` 在 main 推送、目标为 main 的 Pull Request 或手动触发时运行。标签推送不重复启动同一组检查；同一 ref 的新运行会取消旧运行。任务位于 GitHub 的临时 Ubuntu 24.04 runner，不会连接本机机器人。
 
-流水线依次检查文档与资源、安装 Jazzy 依赖、构建、运行 colcon 单元测试、Action 故障注入及 mock 底盘回归；当前不包含 Gazebo 仿真矩阵。单元测试通过不等于后续故障注入也通过。
+流水线依次检查文档与资源、配置 ROS 软件源和开发工具、安装 Jazzy ROS base 与声明的依赖、构建、运行 colcon 单元测试、Action 故障注入及 mock 底盘回归；当前不包含 Gazebo 仿真矩阵。ROS base 和声明依赖分步安装并保存日志，不额外安装整个 desktop 元包。总任务上限为 45 分钟，工具配置、ROS base、声明依赖分别限制为 10、10、15 分钟。单元测试通过不等于后续故障注入也通过。
 
 失败时先看报错步骤和断言上下文。任务回归会写出 `artifacts/navcraft-regression/result.json`，检查断言失败时另写 `failure.json`，包含实际 Action 状态、结果消息、期望/实际重试次数与最近执行状态。CI 无论成功失败都会尝试上传 `regression-<attempt>` 日志产物，保存 7 天。云端结果以对应提交的 Actions 运行记录为准，本地通过不能替代云端结果。

@@ -13,19 +13,27 @@ concurrency:
 jobs:
   build-and-regress:
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v7
       - name: Documentation and scene media integrity
         run: python3 scripts/check_docs.py
-      - uses: ros-tooling/setup-ros@v0.7
-        with:
-          required-ros-distributions: jazzy
-      - name: Install declared dependencies
+      - name: Configure ROS repositories and development tools
+        uses: ros-tooling/setup-ros@v0.7
+        timeout-minutes: 10
+      - name: Install ROS base
+        timeout-minutes: 10
         run: |
+          set -o pipefail
+          mkdir -p artifacts
+          sudo apt-get install --no-install-recommends -y ros-jazzy-ros-base 2>&1 | tee artifacts/ci-ros-base.log
+      - name: Install declared dependencies
+        timeout-minutes: 15
+        run: |
+          set -o pipefail
           source /opt/ros/jazzy/setup.bash
           rosdep update
-          rosdep install --from-paths src --ignore-src -r -y
+          rosdep install --from-paths src --ignore-src -r -y 2>&1 | tee artifacts/ci-dependencies.log
       - name: Build single-robot workspace
         run: bash scripts/build_ws.sh
       - name: Unit and Action fault-injection regression
@@ -43,6 +51,8 @@ jobs:
         if: ${{ failure() }}
         run: |
           python3 scripts/report_ci_failure.py \
+            --log artifacts/ci-ros-base.log \
+            --log artifacts/ci-dependencies.log \
             --log artifacts/ci-regression.log \
             --log artifacts/ci-mock-chassis.log
       - name: Upload regression diagnostics
@@ -52,6 +62,8 @@ jobs:
           name: regression-${{ github.run_attempt }}
           path: |
             artifacts/navcraft-regression/
+            artifacts/ci-ros-base.log
+            artifacts/ci-dependencies.log
             artifacts/ci-regression.log
             artifacts/ci-mock-chassis.log
             log-navcraft/
