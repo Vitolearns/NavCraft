@@ -29,12 +29,22 @@ jobs:
       - name: Build single-robot workspace
         run: bash scripts/build_ws.sh
       - name: Unit and Action fault-injection regression
-        run: bash scripts/test.sh
+        run: |
+          set -o pipefail
+          mkdir -p artifacts
+          bash scripts/test.sh 2>&1 | tee artifacts/ci-regression.log
       - name: Mock chassis motion and watchdog regression
         run: |
+          set -o pipefail
           source /opt/ros/jazzy/setup.bash
           source install-navcraft/local_setup.bash
-          python3 scripts/test_mock_chassis.py
+          python3 scripts/test_mock_chassis.py 2>&1 | tee artifacts/ci-mock-chassis.log
+      - name: Publish failure context
+        if: ${{ failure() }}
+        run: |
+          python3 scripts/report_ci_failure.py \
+            --log artifacts/ci-regression.log \
+            --log artifacts/ci-mock-chassis.log
       - name: Upload regression diagnostics
         if: ${{ always() }}
         uses: actions/upload-artifact@v7
@@ -42,6 +52,8 @@ jobs:
           name: regression-${{ github.run_attempt }}
           path: |
             artifacts/navcraft-regression/
+            artifacts/ci-regression.log
+            artifacts/ci-mock-chassis.log
             log-navcraft/
             build-navcraft/**/test_results/
           if-no-files-found: ignore
