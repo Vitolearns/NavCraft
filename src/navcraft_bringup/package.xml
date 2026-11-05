@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>navcraft_bringup</name><version>0.1.0</version>
+  <description>Navigation, mapping, and tracking launch orchestration.</description>
+  <maintainer email="88704179+Vitolearns@users.noreply.github.com">vito</maintainer><license>MIT</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <exec_depend>navcraft_simulation</exec_depend>
+  <exec_depend>navcraft_navigation</exec_depend>
+  <exec_depend>navcraft_mission</exec_depend>
+  <exec_depend>navcraft_safety</exec_depend>
+  <exec_depend>navcraft_teleop</exec_depend>
+  <exec_depend>navcraft_diagnostics</exec_depend>
+  <exec_depend>navcraft_tracking</exec_depend>
+  <exec_depend>navcraft_evaluation</exec_depend>
+  <exec_depend>navcraft_hardware</exec_depend>
+  <exec_depend>rviz2</exec_depend>
+  <exec_depend>launch</exec_depend><exec_depend>launch_ros</exec_depend>
+  <export><build_type>ament_cmake</build_type></export>
+</package>

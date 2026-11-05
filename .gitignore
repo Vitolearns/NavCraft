@@ -1,0 +1,28 @@
+# ROS builds and acceptance output
+build*/
+install*/
+log*/
+artifacts/
+.recovery/
+# Cache, local environment and editor state
+__pycache__/
+*.py[cod]
+.cache/
+.env
+.env.*
+.vscode/
+*.log
+# Compiler output
+*.o
+*.a
+*.so
+compile_commands.json
+CMakeUserPresets.json
+# Local workspace state
+.local/
+.idea/
+.DS_Store
+*.swp
+*.swo
+*~
+.pytest_cache/

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>navcraft_safety</name><version>0.1.0</version>
+  <description>Fail-closed velocity gate for the single-robot execution chain.</description>
+  <maintainer email="88704179+Vitolearns@users.noreply.github.com">vito</maintainer><license>MIT</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <depend>rclcpp</depend>
+  <depend>geometry_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>std_srvs</depend>
+  <export><build_type>ament_cmake</build_type></export>
+</package>

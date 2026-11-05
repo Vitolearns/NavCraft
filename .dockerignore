@@ -1,0 +1,17 @@
+# Only release inputs belong in the build context.
+**
+!src/
+!src/**
+!scripts/
+!scripts/**
+!docs/
+!docs/**
+!docker/
+!docker/**
+!README.md
+!LICENSE
+!.clang-format
+**/__pycache__/
+**/*.py[cod]
+**/*.log
+**/*~

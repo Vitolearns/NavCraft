@@ -1,0 +1,28 @@
+name: ros2-ci
+on:
+  push:
+  pull_request:
+jobs:
+  build-and-regress:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Documentation and scene media integrity
+        run: python3 scripts/check_docs.py
+      - uses: ros-tooling/setup-ros@v0.7
+        with:
+          required-ros-distributions: jazzy
+      - name: Install declared dependencies
+        run: |
+          source /opt/ros/jazzy/setup.bash
+          rosdep update
+          rosdep install --from-paths src --ignore-src -r -y
+      - name: Build single-robot workspace
+        run: bash scripts/build_ws.sh
+      - name: Unit and Action fault-injection regression
+        run: bash scripts/test.sh
+      - name: Mock chassis motion and watchdog regression
+        run: |
+          source /opt/ros/jazzy/setup.bash
+          source install-navcraft/local_setup.bash
+          python3 scripts/test_mock_chassis.py

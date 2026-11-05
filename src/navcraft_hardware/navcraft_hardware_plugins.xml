@@ -1,0 +1,10 @@
+<library path="robot_chassis_hardware">
+  <class
+    name="navcraft_hardware/ChassisHardwareInterface"
+    type="navcraft_hardware::ChassisHardwareInterface"
+    base_class_type="hardware_interface::SystemInterface">
+    <description>
+      ros2_control SystemInterface backed by the existing Serial, UDP, and Mock chassis adapter.
+    </description>
+  </class>
+</library>

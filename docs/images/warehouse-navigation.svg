@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="2680" viewBox="0 0 1800 2680" role="img" aria-labelledby="title desc">
+<title id="title">NavCraft · 仓库导航、绕障与独立验收</title>
+<desc id="desc">激光感知 → 定位与代价地图 → Nav2 规划控制 → 速度保护 → Gazebo；真值只用于测量。详细职责与源码见 docs/architecture.md。</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M 1 1 L 8 5 L 1 9" fill="none" stroke="#91999f" stroke-width="1.7"/></marker></defs>
+<rect width="1800" height="2680" fill="#fcfdff"/>
+<g font-family="Noto Sans CJK SC,Microsoft YaHei,Droid Sans Fallback,DejaVu Sans,sans-serif">
+<text x="900" y="55" font-size="34" font-weight="700" fill="#00569b" text-anchor="middle">NavCraft · 仓库导航、绕障与独立验收</text>
+<text x="900" y="96" font-size="21" font-weight="400" fill="#536c7f" text-anchor="middle">激光感知 → 定位与代价地图 → Nav2 规划控制 → 速度保护 → Gazebo；真值只用于测量</text>
+<rect x="380" y="1100" width="1050" height="545" rx="14" fill="#f5f7f9" stroke="#d9dfe4" stroke-width="2"/>
+<path d="M 240 275 L 240 380" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 1480 275 L 1480 380" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 200 525 L 200 690" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 300 525 L 300 577 Q 300 590 313 590 L 547 590 Q 560 590 560 603 L 560 690" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 655 525 L 655 690" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 1020 525 L 1020 597 Q 1020 610 1007 610 L 853 610 Q 840 610 840 623 L 840 690" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 1100 525 L 1100 557 Q 1100 570 1087 570 L 413 570 Q 400 570 400 583 L 400 690" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 1480 525 L 1480 690" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 250 880 L 250 1247 Q 250 1260 263 1260 L 430 1260" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 310 880 L 310 1497 Q 310 1510 323 1510 L 430 1510" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 720 880 L 720 1100" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 1350 890 L 1350 1057 Q 1350 1070 1337 1070 L 1243 1070 Q 1230 1070 1230 1083 L 1230 1185" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 1080 1260 L 1000 1260" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 1080 1310 L 1053 1310 Q 1040 1310 1040 1323 L 1040 1372 Q 1040 1385 1027 1385 L 953 1385 Q 940 1385 940 1398 L 940 1430" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 1230 1340 L 1230 1430" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 715 1340 L 715 1430" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 480 450 L 472.5 450 Q 465 450 465 457.5 L 465 1012 Q 465 1025 452 1025 L 363 1025 Q 350 1025 350 1038 L 350 1545 Q 350 1558 363 1558 L 430 1558" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 715 1590 L 715 1667 Q 715 1680 728 1680 L 837 1680 Q 850 1680 850 1693 L 850 1745" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 1230 1590 L 1230 1667 Q 1230 1680 1217 1680 L 1133 1680 Q 1120 1680 1120 1693 L 1120 1745" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 975 1850 L 975 1970" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 1600 1850 L 1600 1902 Q 1600 1915 1587 1915 L 1423 1915 Q 1410 1915 1410 1928 L 1410 1970" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 1610 890 L 1610 1692 Q 1610 1705 1623 1705 L 1747 1705 Q 1760 1705 1760 1718 L 1760 1872 Q 1760 1885 1747 1885 L 1333 1885 Q 1320 1885 1320 1898 L 1320 1970" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 1045 2165 L 1045 2217 Q 1045 2230 1032 2230 L 893 2230 Q 880 2230 880 2243 L 880 2290" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 1140 2355 L 1280 2355" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 1505 2420 L 1505 2500" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 620 2355 L 563 2355 Q 550 2355 550 2342 L 550 2253 Q 550 2240 537 2240 L 38 2240 Q 25 2240 25 2227 L 25 463 Q 25 450 38 450 L 80 450" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<rect x="80" y="155" width="320" height="120" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="240" y="190" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">放置实体障碍</text>
+<text x="240" y="230" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">obstacle block / clear</text>
+<text x="240" y="259" font-size="17.9775" font-weight="400" fill="#00569b" text-anchor="middle">或 test_warehouse.py 自动注入</text>
+<rect x="1250" y="155" width="460" height="120" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="1480" y="204.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">warehouse 命令</text>
+<text x="1480" y="244.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">mission.py → /navigate_sequence</text>
+<rect x="80" y="380" width="320" height="145" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="240" y="427.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">激光 /scan</text>
+<text x="240" y="467.5" font-size="18.3908" font-weight="400" fill="#00569b" text-anchor="middle">gpu_lidar → bridge → filter</text>
+<text x="240" y="496.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">实时检测障碍表面</text>
+<rect x="480" y="380" width="350" height="145" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="655" y="427.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">轮式 odom 与 TF</text>
+<text x="655" y="467.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">/odom：控制用运动估计</text>
+<text x="655" y="496.5" font-size="18.5099" font-weight="400" fill="#00569b" text-anchor="middle">odom → base_footprint：定位输入</text>
+<rect x="900" y="380" width="300" height="145" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="1050" y="427.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">静态仓库地图</text>
+<text x="1050" y="467.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">map_server → /map</text>
+<text x="1050" y="496.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">由场景碰撞几何生成</text>
+<rect x="1250" y="380" width="460" height="145" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="1480" y="427.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">六站路线 warehouse_route.py</text>
+<text x="1480" y="467.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">receiving → storage B → storage A</text>
+<text x="1480" y="496.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">packing → dock 接近点 → home</text>
+<rect x="50" y="690" width="400" height="190" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="250" y="745.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">全局 / 局部代价地图</text>
+<text x="250" y="785.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">静态层 + 障碍层 + 膨胀层</text>
+<text x="250" y="814.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">/scan 标记与清除实时障碍</text>
+<text x="250" y="843.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">全局 map 帧；局部 odom 滚动窗口</text>
+<rect x="520" y="690" width="400" height="190" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="720" y="745.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">AMCL 定位</text>
+<text x="720" y="785.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">激光匹配已有地图</text>
+<text x="720" y="814.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">经 TF 获取里程计运动</text>
+<text x="720" y="843.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">输出 map → odom</text>
+<rect x="1150" y="690" width="560" height="200" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="1430" y="750.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">航点执行器 navcraft_mission</text>
+<text x="1430" y="790.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">顺序派发 · 有限重试 · 超时处理</text>
+<text x="1430" y="819.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">暂停 / 恢复 / 取消 · 迟到回调收尾</text>
+<text x="1430" y="848.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">下层结果未知 → FAULT，拒绝新任务</text>
+<rect x="430" y="1185" width="570" height="155" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="715" y="1237.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">全局规划 planner_server</text>
+<text x="715" y="1277.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">NavFn：Dijkstra 搜索（use_astar=false）</text>
+<text x="715" y="1306.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">全局代价地图 → 可行路径 /plan</text>
+<rect x="1080" y="1185" width="300" height="155" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="1230" y="1237.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">BT 导航调度</text>
+<text x="1230" y="1277.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">bt_navigator</text>
+<text x="1230" y="1306.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">NavigateToPose Action</text>
+<rect x="430" y="1430" width="570" height="160" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="715" y="1470.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">路径跟随 controller_server</text>
+<text x="715" y="1510.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">Regulated Pure Pursuit · 20 Hz</text>
+<text x="715" y="1539.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">/plan + /odom + TF + 局部代价地图</text>
+<text x="715" y="1568.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">速度调节与碰撞检测，目标速度 0.35 m/s</text>
+<rect x="1080" y="1430" width="300" height="160" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="1230" y="1485" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">恢复行为</text>
+<text x="1230" y="1525" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">behavior_server</text>
+<text x="1230" y="1554" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">旋转 / 后退 / 等待</text>
+<rect x="650" y="1745" width="650" height="105" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="975" y="1787" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">Nav2 速度 /nav2_cmd_vel</text>
+<text x="975" y="1827" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">路径跟随或恢复行为产生 Twist</text>
+<rect x="1470" y="1745" width="260" height="105" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="1600" y="1787" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">导航急停</text>
+<text x="1600" y="1827" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">/emergency_stop</text>
+<rect x="620" y="1970" width="850" height="195" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="1045" y="2028" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">navcraft_safety · 导航速度门</text>
+<text x="1045" y="2068" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">仅 RUNNING 放行；状态心跳与速度各自 &lt; 300 ms</text>
+<text x="1045" y="2097" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">锁存急停 · 拒绝非有限值 · 限幅 ±0.5 m/s、±1.2 rad/s</text>
+<text x="1045" y="2126" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">暂停 / 取消 / FAULT / 超时 → 零速；解除急停需要新速度</text>
+<rect x="620" y="2290" width="520" height="130" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="880" y="2330" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">Gazebo 差速机器人</text>
+<text x="880" y="2370" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">/cmd_vel → bridge → DiffDrive</text>
+<text x="880" y="2399" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">实际运动产生激光、odom 和 TF 反馈</text>
+<rect x="1280" y="2290" width="450" height="130" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="1505" y="2330" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">Gazebo 世界位姿</text>
+<text x="1505" y="2370" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">PosePublisher · 20 Hz</text>
+<text x="1505" y="2399" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">/model/mobile_robot/pose</text>
+<rect x="620" y="2500" width="1110" height="125" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="1175" y="2537.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">独立验收 test_warehouse.py</text>
+<text x="1175" y="2577.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">测试专用桥接 /warehouse_ground_truth；绝不注入导航 /tf</text>
+<text x="1175" y="2606.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">六站 map / world 误差 &lt; 0.35 m；障碍中心距离 &gt; 0.40 m；完结零速</text>
+<rect x="65" y="2310" width="400" height="280" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="265" y="2383" font-size="23" font-weight="700" fill="#00569b" text-anchor="middle">观测与验收边界</text>
+<text x="265" y="2420" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">/plan：全局路径</text>
+<text x="265" y="2449" font-size="20.5357" font-weight="400" fill="#00569b" text-anchor="middle">/lookahead_collision_arc：碰撞弧</text>
+<text x="265" y="2478" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">odom 误差单独记录</text>
+<text x="265" y="2507" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">世界位姿不反馈给导航</text>
+<text x="265" y="2536" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">warehouse 不自动放置障碍</text>
+<rect x="181" y="307" width="118" height="38" rx="19" fill="#f6fbff" stroke="#cfdeeb" stroke-width="1.7"/>
+<text x="240" y="333" font-size="21" font-weight="700" fill="#00569b" text-anchor="middle">激光检测</text>
+<text x="905" y="1139" font-size="25" font-weight="700" fill="#3d5568" text-anchor="middle">Nav2 导航：BT 调度、全局规划、路径跟随与恢复</text>
+<rect x="487" y="962" width="466" height="38" rx="19" fill="#f6fbff" stroke="#cfdeeb" stroke-width="1.7"/>
+<text x="720" y="988" font-size="20" font-weight="700" fill="#00569b" text-anchor="middle">地图中的机器人位姿：map → odom + odom TF</text>
+<rect x="1234" y="962" width="232" height="38" rx="19" fill="#f6fbff" stroke="#cfdeeb" stroke-width="1.7"/>
+<text x="1350" y="988" font-size="20" font-weight="700" fill="#00569b" text-anchor="middle">/navigate_to_pose</text>
+<rect x="960.5" y="1362" width="139" height="38" rx="19" fill="#f6fbff" stroke="#cfdeeb" stroke-width="1.7"/>
+<text x="1030" y="1388" font-size="18" font-weight="700" fill="#00569b" text-anchor="middle">FollowPath</text>
+<rect x="667.5" y="1364" width="95" height="38" rx="19" fill="#f6fbff" stroke="#cfdeeb" stroke-width="1.7"/>
+<text x="715" y="1390" font-size="21" font-weight="700" fill="#00569b" text-anchor="middle">/plan</text>
+<rect x="414" y="1002" width="92" height="38" rx="19" fill="#f6fbff" stroke="#cfdeeb" stroke-width="1.7"/>
+<text x="460" y="1028" font-size="20" font-weight="700" fill="#00569b" text-anchor="middle">/odom</text>
+<rect x="1500" y="1597" width="220" height="38" rx="19" fill="#f6fbff" stroke="#cfdeeb" stroke-width="1.7"/>
+<text x="1610" y="1623" font-size="20" font-weight="700" fill="#00569b" text-anchor="middle">/execution_state</text>
+<rect x="915.5" y="2207" width="259" height="38" rx="19" fill="#f6fbff" stroke="#cfdeeb" stroke-width="1.7"/>
+<text x="1045" y="2233" font-size="20" font-weight="700" fill="#00569b" text-anchor="middle">唯一最终输出 /cmd_vel</text>
+<rect x="173" y="2217" width="174" height="38" rx="19" fill="#f6fbff" stroke="#cfdeeb" stroke-width="1.7"/>
+<text x="260" y="2243" font-size="20" font-weight="700" fill="#00569b" text-anchor="middle">运动后重新感知</text>
+<text x="900" y="2653" font-size="18" font-weight="400" fill="#64798b" text-anchor="middle">实线：数据 / 控制流    ·    虚线：启动选择 / 可选关系    ·    依据当前 launch 与配置</text>
+</g></svg>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1930" viewBox="0 0 1800 1930" role="img" aria-labelledby="title desc">
+<title id="title">NavCraft · TF 树与发布责任</title>
+<desc id="desc">TF 是坐标关系；每条动态变换只保留一个发布路径，世界真值不进入这棵树。详细职责与源码见 docs/architecture.md。</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M 1 1 L 8 5 L 1 9" fill="none" stroke="#91999f" stroke-width="1.7"/></marker></defs>
+<rect width="1800" height="1930" fill="#fcfdff"/>
+<g font-family="Noto Sans CJK SC,Microsoft YaHei,Droid Sans Fallback,DejaVu Sans,sans-serif">
+<text x="900" y="55" font-size="34" font-weight="700" fill="#00569b" text-anchor="middle">NavCraft · TF 树与发布责任</text>
+<text x="900" y="96" font-size="21" font-weight="400" fill="#536c7f" text-anchor="middle">TF 是坐标关系；每条动态变换只保留一个发布路径，世界真值不进入这棵树</text>
+<path d="M 900 300 L 900 440" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 900 550 L 900 690" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 900 800 L 900 940" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 900 1050 L 900 1147 Q 900 1160 887 1160 L 213 1160 Q 200 1160 200 1173 L 200 1260" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 900 1050 L 900 1147 Q 900 1160 887 1160 L 563 1160 Q 550 1160 550 1173 L 550 1260" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 900 1050 L 900 1260" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 900 1050 L 900 1147 Q 900 1160 913 1160 L 1237 1160 Q 1250 1160 1250 1173 L 1250 1260" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 900 1050 L 900 1147 Q 900 1160 913 1160 L 1587 1160 Q 1600 1160 1600 1173 L 1600 1260" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<rect x="650" y="165" width="500" height="135" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="900" y="207.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">map</text>
+<text x="900" y="247.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">导航：AMCL</text>
+<text x="900" y="276.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">建图：SLAM Toolbox / Cartographer</text>
+<rect x="650" y="440" width="500" height="110" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="900" y="484.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">odom</text>
+<text x="900" y="524.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">连续里程计参考系</text>
+<rect x="650" y="690" width="500" height="110" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="900" y="734.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">base_footprint</text>
+<text x="900" y="774.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">底盘在地面上的投影坐标系</text>
+<rect x="650" y="940" width="500" height="110" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="900" y="984.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">base_link</text>
+<text x="900" y="1024.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">机器人实体参考系</text>
+<rect x="45" y="1260" width="310" height="155" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="200" y="1314" font-size="23" font-weight="700" fill="#00569b" text-anchor="middle">lidar_link</text>
+<text x="200" y="1351" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">xyz=(0.18, 0, 0.27) m</text>
+<text x="200" y="1380" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">固定安装 · /tf_static</text>
+<rect x="395" y="1260" width="310" height="155" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="550" y="1314" font-size="23" font-weight="700" fill="#00569b" text-anchor="middle">imu_link</text>
+<text x="550" y="1351" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">xyz=(0, 0, 0.22) m</text>
+<text x="550" y="1380" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">固定安装 · /tf_static</text>
+<rect x="745" y="1260" width="310" height="155" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="900" y="1314" font-size="23" font-weight="700" fill="#00569b" text-anchor="middle">camera_link</text>
+<text x="900" y="1351" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">xyz=(0.28, 0, 0.20) m</text>
+<text x="900" y="1380" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">无独立 optical frame</text>
+<rect x="1095" y="1260" width="310" height="155" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="1250" y="1314" font-size="23" font-weight="700" fill="#00569b" text-anchor="middle">caster_wheel</text>
+<text x="1250" y="1351" font-size="19.9713" font-weight="400" fill="#00569b" text-anchor="middle">xyz=(-0.20, 0, -0.035) m</text>
+<text x="1250" y="1380" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">固定安装 · /tf_static</text>
+<rect x="1445" y="1260" width="310" height="155" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="1600" y="1314" font-size="23" font-weight="700" fill="#00569b" text-anchor="middle">left / right_wheel</text>
+<text x="1600" y="1351" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">可动轮关节 · /tf</text>
+<text x="1600" y="1380" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">当前 joint_states 供显示</text>
+<rect x="60" y="1595" width="800" height="220" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2" stroke-dasharray="8 6"/>
+<text x="460" y="1651" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">可选底盘：替换 odom 发布责任</text>
+<text x="460" y="1691" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">直接驱动：底盘节点提供 odom 与 TF</text>
+<text x="460" y="1720" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">EKF：关闭驱动发布，由 EKF 独占 odom TF</text>
+<text x="460" y="1749" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">ros2_control：差速控制器负责 odom TF</text>
+<text x="460" y="1778" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">三者均为独立入口，不与默认 Gazebo 同开</text>
+<rect x="940" y="1595" width="800" height="220" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2" stroke-dasharray="8 6"/>
+<text x="1340" y="1651" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">与导航 TF 分开的关系</text>
+<text x="1340" y="1691" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">独立跟踪只用 odom，无需 map → odom</text>
+<text x="1340" y="1720" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">PosePublisher → /warehouse_ground_truth 仅验收</text>
+<text x="1340" y="1749" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">绝不把 Gazebo 世界位置灌入 /tf</text>
+<text x="1340" y="1778" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">轮式 odom 偏离需单独评价，不能以真值替换</text>
+<rect x="727.5" y="344" width="345" height="38" rx="19" fill="#f6fbff" stroke="#cfdeeb" stroke-width="1.7"/>
+<text x="900" y="370" font-size="20" font-weight="700" fill="#00569b" text-anchor="middle">map → odom：定位 / 建图二选一</text>
+<rect x="738" y="594" width="324" height="38" rx="19" fill="#f6fbff" stroke="#cfdeeb" stroke-width="1.7"/>
+<text x="900" y="620" font-size="20" font-weight="700" fill="#00569b" text-anchor="middle">gazebo_odom_tf_node · /tf</text>
+<rect x="654" y="844" width="492" height="38" rx="19" fill="#f6fbff" stroke="#cfdeeb" stroke-width="1.7"/>
+<text x="900" y="870" font-size="20" font-weight="700" fill="#00569b" text-anchor="middle">robot_state_publisher · 固定 z = 0.075 m</text>
+<rect x="712" y="1137" width="376" height="38" rx="19" fill="#f6fbff" stroke="#cfdeeb" stroke-width="1.7"/>
+<text x="900" y="1163" font-size="21" font-weight="700" fill="#00569b" text-anchor="middle">robot_state_publisher + URDF</text>
+<text x="900" y="1485" font-size="22" font-weight="400" fill="#536c7f" text-anchor="middle">安装 xyz 相对 base_link；joint_state_publisher 未接入 Gazebo 真实轮关节反馈</text>
+<text x="900" y="1903" font-size="18" font-weight="400" fill="#64798b" text-anchor="middle">实线：数据 / 控制流    ·    虚线：启动选择 / 可选关系    ·    依据当前 launch 与配置</text>
+</g></svg>
