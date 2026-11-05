@@ -7,7 +7,8 @@
   <img alt="ROS 2 Jazzy" src="https://img.shields.io/badge/ROS_2-Jazzy-22314E?style=flat-square">
   <img alt="Gazebo Harmonic" src="https://img.shields.io/badge/Gazebo-Harmonic-ED8B00?style=flat-square">
   <img alt="Ubuntu 24.04" src="https://img.shields.io/badge/Ubuntu-24.04-E95420?style=flat-square">
-  <img alt="Release v0.1" src="https://img.shields.io/badge/release-v0.1-2563EB?style=flat-square">
+  <img alt="Release v0.2.0" src="https://img.shields.io/badge/release-v0.2.0-2563EB?style=flat-square">
+  <img alt="License: PolyForm Noncommercial 1.0.0" src="https://img.shields.io/badge/license-PolyForm_Noncommercial-7C3AED?style=flat-square">
 </p>
 
 <p align="center"><strong>English</strong> · <a href="README.zh-CN.md">简体中文</a></p>
@@ -19,6 +20,8 @@
 NavCraft brings localization, planning, control, and mission execution into a single-robot warehouse simulation. Send a six-stop mission, introduce a physical obstacle, inspect the replanned path, and pause or cancel execution while observing the robot's actual motion.
 
 Built on **ROS 2 Jazzy, Nav2, and Gazebo Harmonic**, it combines a known-map navigation stack with mission state handling, velocity protection, isolated launch modes, and independent arrival checks. Separate modes support **SLAM Toolbox / Cartographer** mapping and **Pure Pursuit / Stanley** tracking experiments.
+
+> **License:** From `v0.2.0`, NavCraft is source-available under [PolyForm Noncommercial 1.0.0](LICENSE). Commercial uses outside its permissions require separate written authorization. See [licensing details](docs/licensing.md).
 
 ## Highlights
 
@@ -134,6 +137,7 @@ SLAM and tracking use `/enable_emergency_stop`; `demo.sh estop/release` target n
 | [Development](docs/development.md) | Configuration, optional launches, troubleshooting, and cleanup |
 | [Validation](docs/validation.md) | Reproduction commands, dated results, and coverage limits |
 | [Project walkthrough](docs/project-guide.md) | Engineering choices and a guided explanation of the system |
+| [Licensing](docs/licensing.md) | Noncommercial terms, commercial permission, prior MIT grants, and third-party scope |
 
 Detailed guides and diagram labels are currently in Chinese. [简体中文首页](README.zh-CN.md) provides the same entry points.
 
@@ -182,4 +186,8 @@ NavCraft builds on [ROS 2](https://www.ros.org/), [Nav2](https://docs.nav2.org/)
 
 ## License
 
-[MIT](LICENSE).
+From **v0.2.0**, original NavCraft material that can be offered under these terms is provided under the [PolyForm Noncommercial License 1.0.0](LICENSE), SPDX identifier `PolyForm-Noncommercial-1.0.0`. This is a source-available license with noncommercial restrictions, rather than an OSI-approved open-source license.
+
+The full license governs permitted noncommercial and personal uses, including its explicit permissions for educational, public research, and other listed organizations. Commercial uses outside those permissions require separate written authorization from the [maintainer](https://github.com/Vitolearns). Start with a [commercial licensing inquiry](https://github.com/Vitolearns/NavCraft/issues/new?title=Commercial%20licensing%20inquiry).
+
+The published **v0.1 remains under MIT**; prior MIT grants are unaffected. Third-party material retains its own license. See [license scope and history](docs/licensing.md), the [changelog](CHANGELOG.md), and [notices](NOTICE).

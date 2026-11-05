@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="3">
-  <name>navcraft_mission</name><version>0.1.0</version>
+  <name>navcraft_mission</name><version>0.2.0</version>
   <description>Bounded single-robot Nav2 sequence execution and interruption semantics.</description>
-  <maintainer email="88704179+Vitolearns@users.noreply.github.com">vito</maintainer><license>MIT</license>
+  <maintainer email="88704179+Vitolearns@users.noreply.github.com">vito</maintainer><license>PolyForm-Noncommercial-1.0.0</license>
   <buildtool_depend>ament_cmake</buildtool_depend>
   <depend>rclcpp</depend>
   <depend>rclcpp_action</depend>

@@ -7,7 +7,8 @@
   <img alt="ROS 2 Jazzy" src="https://img.shields.io/badge/ROS_2-Jazzy-22314E?style=flat-square">
   <img alt="Gazebo Harmonic" src="https://img.shields.io/badge/Gazebo-Harmonic-ED8B00?style=flat-square">
   <img alt="Ubuntu 24.04" src="https://img.shields.io/badge/Ubuntu-24.04-E95420?style=flat-square">
-  <img alt="Release v0.1" src="https://img.shields.io/badge/release-v0.1-2563EB?style=flat-square">
+  <img alt="Release v0.2.0" src="https://img.shields.io/badge/release-v0.2.0-2563EB?style=flat-square">
+  <img alt="License: PolyForm Noncommercial 1.0.0" src="https://img.shields.io/badge/license-PolyForm_Noncommercial-7C3AED?style=flat-square">
 </p>
 
 <p align="center"><a href="README.md">English</a> · <strong>简体中文</strong></p>
@@ -19,6 +20,8 @@
 NavCraft 将定位、规划、控制与任务执行组织到一个单车仓库仿真中。下发六站任务、放置实体障碍、观察路径重规划，再通过暂停和取消检查机器人实际运动，让导航过程可以运行、观察和验证。
 
 项目基于 **ROS 2 Jazzy、Nav2 与 Gazebo Harmonic**，集成已有地图导航、航点任务状态管理、速度保护、互斥启动模式和独立到站验收。另提供 **SLAM Toolbox / Cartographer** 建图，以及 **Pure Pursuit / Stanley** 独立跟踪实验。
+
+> **许可：** 自 `v0.2.0` 起，NavCraft 以 [PolyForm Noncommercial 1.0.0](LICENSE) 提供可查看的源码。超出该许可允许范围的商业使用，须取得单独书面授权。见 [许可说明](docs/licensing.md)。
 
 ## 项目亮点
 
@@ -134,6 +137,7 @@ SLAM 与跟踪使用 `/enable_emergency_stop`；`demo.sh estop/release` 面向�
 | [开发与维护](docs/development.md) | 配置、可选入口、排错与清理 |
 | [验收记录](docs/validation.md) | 复现命令、带日期的结果与验证边界 |
 | [项目讲解](docs/project-guide.md) | 工程取舍与系统讲解路线 |
+| [许可与版本变更](docs/licensing.md) | 非商业许可、商业授权、历史 MIT 权利与第三方边界 |
 
 详细指南与图中文字目前为中文。[English](README.md) 提供相同的项目入口。
 
@@ -182,4 +186,8 @@ NavCraft 基于 [ROS 2](https://www.ros.org/)、[Nav2](https://docs.nav2.org/)�
 
 ## 许可证
 
-[MIT](LICENSE)。
+自 **v0.2.0** 起，本项目中有权按此条款提供的 NavCraft 原创内容采用 [PolyForm Noncommercial License 1.0.0](LICENSE)，SPDX 标识为 `PolyForm-Noncommercial-1.0.0`。这是包含非商业限制的源码可见许可，不属于 OSI 定义的开源许可证。
+
+允许的非商业用途、个人用途及教育、公共研究等机构的明确许可，以许可证全文为准。超出许可范围的商业用途须向 [维护者](https://github.com/Vitolearns) 取得单独书面授权，可先提交 [商业授权咨询](https://github.com/Vitolearns/NavCraft/issues/new?title=Commercial%20licensing%20inquiry)。
+
+已发布的 **v0.1 仍适用 MIT**，已有 MIT 授权不因本次变更而撤销；第三方内容仍适用各自许可证。详见 [许可范围与版本历史](docs/licensing.md)、[许可变更记录](CHANGELOG.md) 和 [通知](NOTICE)。
