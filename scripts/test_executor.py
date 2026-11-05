@@ -49,6 +49,8 @@ class Harness(Node):
         self.controls = {n: self.create_client(Trigger, f'/{n}_mission', callback_group=self.group)
                          for n in ['pause', 'resume', 'cancel']}
         self.server = None
+        self.acceptance_started = threading.Event()
+        self.acceptance_release = threading.Event()
 
     def on_state(self, msg):
         self.state = msg.data
@@ -63,7 +65,9 @@ class Harness(Node):
         if self.mode == 'late_accept':
             time.sleep(1.2)
         if self.mode == 'delayed_accept':
-            time.sleep(0.4)
+            self.acceptance_started.set()
+            if not self.acceptance_release.wait(timeout=5):
+                return GoalResponse.REJECT
         return GoalResponse.REJECT if self.mode == 'reject' else GoalResponse.ACCEPT
 
     def execute(self, handle):
@@ -190,8 +194,14 @@ def main():
         check('two real action results complete sequence', r.status == 4 and r.result.succeeded_goals == 2)
         node.mode = 'delayed_accept'
         h = node.submit()
-        wait(lambda: node.state == 'SENDING')
-        check('pause while acceptance pending', node.service('pause').message == 'PAUSING')
+        try:
+            wait(node.acceptance_started.is_set)
+            wait(lambda: node.state == 'SENDING')
+            check('pause while acceptance pending', node.service('pause').message == 'PAUSING')
+        finally:
+            # Release only after pause is acknowledged; do not spend the 0.7 s
+            # cancellation budget on an unrelated fixed acceptance delay.
+            node.acceptance_release.set()
         wait(lambda: node.state == 'PAUSED')
         check('late accepted goal stopped before PAUSED', node.active == 0)
         result(h.cancel_goal_async())

@@ -71,6 +71,8 @@ ROS_DOMAIN_ID=190 python3 scripts/test_lifecycle.py
 
 另核验 Bash 语法、workflow YAML 与安装阶段时限；受控失败分别保留 colcon test 的退出码 17、test-result 的退出码 19，且两种失败都会打印结果、不继续运行 Action 回归。这次本地复验未重新构建或运行 Gazebo，不验证 GitHub runner 的网络与全新依赖安装。云端 CI 结论仍需查看对应提交的运行记录。
 
+云端运行 `42055992430` 的安装与构建通过，Action 回归在延迟接收期间暂停后进入 FAULT。原测试把 0.4 秒接收等待和 0.25 秒取消收尾放在 0.7 秒取消期限内，仅余约 50 毫秒调度余量；本地额外注入 150 毫秒延迟可复现取消超时。现改为事件同步，确认暂停受理后才释放接收，保持原超时参数和故障断言。相同延迟下 37 项检查通过；随后 `ROS_DOMAIN_ID=188 bash scripts/test.sh` 的 108 项单元与 37 项 Action/速度保护检查全部通过，退出码 0。执行器和速度保护源码未改，修复后的云端结果仍以对应运行记录为准。
+
 ## 结果适用范围
 
 建图验收检查 OccupancyGrid 生成，未评估全场景建图精度。跟踪验收检查运动、急停与唯一速度发布者，未完成公平算法性能比较。Serial、UDP 与 ros2_control 适配不代表实车验证；Docker 构建尚未验证；托管 CI 状态以 [Actions](https://github.com/Vitolearns/NavCraft/actions/workflows/ci.yml) 中对应提交的运行结果为准，覆盖构建、单元、任务故障注入和 mock 底盘，不覆盖 Gazebo 矩阵。仓库指标仅适用于指定路线、障碍和这次运行。
