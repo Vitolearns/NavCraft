@@ -63,11 +63,9 @@ class Harness(Node):
                                    cancel_callback=lambda _: CancelResponse.ACCEPT)
 
     def goal(self, _):
-        if self.mode == 'late_accept':
-            time.sleep(1.2)
-        if self.mode == 'delayed_accept':
+        if self.mode in ('delayed_accept', 'late_accept'):
             self.acceptance_started.set()
-            if not self.acceptance_release.wait(timeout=5):
+            if not self.acceptance_release.wait(timeout=10):
                 return GoalResponse.REJECT
         return GoalResponse.REJECT if self.mode == 'reject' else GoalResponse.ACCEPT
 
@@ -175,8 +173,8 @@ def main():
     def start_executor(cancel_timeout_s=5.0):
         node.state = None
         p = launch('navcraft_mission', 'navigate_sequence_server_node', ['--ros-args',
-                   '-p', 'server_timeout_s:=0.8', '-p', 'response_timeout_s:=0.6',
-                   '-p', f'cancel_timeout_s:={cancel_timeout_s}', '-p', 'goal_timeout_s:=2.0'])
+                   '-p', 'server_timeout_s:=0.8', '-p', 'goal_timeout_s:=2.0',
+                   '-p', f'cancel_timeout_s:={cancel_timeout_s}'])
         assert node.client.wait_for_server(timeout_sec=10)
         for client in node.controls.values():
             assert client.wait_for_service(timeout_sec=5)
@@ -250,11 +248,21 @@ def main():
         h = node.submit()
         check('new task after clean failure succeeds', result(h.get_result_async()).result.success)
         node.mode = 'late_accept'
+        node.acceptance_started.clear()
+        node.acceptance_release.clear()
         previous_attempts = node.attempts
         h = node.submit()
-        r = result(h.get_result_async())
+        try:
+            wait(node.acceptance_started.is_set)
+            # Hold acceptance until the production response deadline has fired.
+            r = result(h.get_result_async(), seconds=8)
+        finally:
+            node.acceptance_release.set()
         wait(lambda: node.state == 'FAULT')
-        check('acceptance timeout faults closed', not r.result.success and not node.submit().accepted)
+        check('acceptance timeout faults closed',
+              r.status == 6 and not r.result.success and
+              r.result.message.startswith('Nav2 acceptance timeout;') and not node.submit().accepted,
+              {'action_status': r.status, 'message': r.result.message})
         wait(lambda: node.active == 0 and node.attempts > previous_attempts, 4)
         time.sleep(0.4)
         check('late acceptance cancelled without clearing fault', node.active == 0 and node.state == 'FAULT')
@@ -265,11 +273,18 @@ def main():
         proc = start_executor(cancel_timeout_s=0.7)
         node.mode = 'ignore_cancel'
         h = node.submit()
-        wait(lambda: node.state == 'RUNNING')
-        node.service('cancel')
-        r = result(h.get_result_async())
+        outcome = h.get_result_async()
+        wait(lambda: node.state == 'RUNNING' or outcome.done())
+        if outcome.done():
+            raise AssertionError(f'Mission ended before cancellation: {outcome.result().result.message}')
+        response = node.service('cancel')
+        assert response.success and response.message == 'CANCELING', response.message
+        r = result(outcome)
         wait(lambda: node.state == 'FAULT')
-        check('cancel timeout faults and rejects new work', not r.result.success and not node.submit().accepted)
+        check('cancel timeout faults and rejects new work',
+              r.status == 6 and not r.result.success and
+              r.result.message.startswith('Nav2 cancellation timeout;') and not node.submit().accepted,
+              {'action_status': r.status, 'message': r.result.message})
         stop(proc)
 
         # Test the velocity gate independently, using controlled heartbeat and velocity publishers.
