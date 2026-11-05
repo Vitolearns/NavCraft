@@ -51,6 +51,7 @@ class Harness(Node):
         self.server = None
         self.acceptance_started = threading.Event()
         self.acceptance_release = threading.Event()
+        self.cancel_events = []
 
     def on_state(self, msg):
         self.state = msg.data
@@ -80,8 +81,12 @@ class Harness(Node):
             start = time.monotonic()
             while time.monotonic() - start < 8:
                 if handle.is_cancel_requested and mode != 'ignore_cancel':
+                    self.cancel_events.append({'event': 'cancel_observed', 'mode': mode,
+                                               'time': time.monotonic()})
                     time.sleep(0.25)  # Cancellation ACK is not terminal completion.
                     handle.canceled()
+                    self.cancel_events.append({'event': 'terminal_canceled', 'mode': mode,
+                                               'time': time.monotonic()})
                     return NavigateToPose.Result()
                 if mode in ['success', 'abort_once', 'abort_always'] and time.monotonic()-start > 0.2:
                     if mode == 'abort_always' or (mode == 'abort_once' and attempt == 1):
@@ -109,7 +114,11 @@ class Harness(Node):
         return result(self.client.send_goal_async(goal or self.goal_message()))
 
     def service(self, name):
-        return result(self.controls[name].call_async(Trigger.Request()))
+        self.cancel_events.append({'event': name+'_sent', 'time': time.monotonic()})
+        response = result(self.controls[name].call_async(Trigger.Request()))
+        self.cancel_events.append({'event': name+'_returned', 'state': response.message,
+                                   'time': time.monotonic()})
+        return response
 
 
 def main():
@@ -131,7 +140,8 @@ def main():
         return {'count': len(checks), 'passed': checks,
                 'state': node.state, 'recent_states': node.states[-20:],
                 'mock_mode': node.mode, 'mock_attempts': node.attempts,
-                'mock_active': node.active, 'error': error, 'details': details or {}}
+                'mock_active': node.active, 'cancel_events': node.cancel_events[-20:],
+                'error': error, 'details': details or {}}
 
     def check(name, condition, details=None):
         if not condition:
@@ -162,11 +172,11 @@ def main():
                 os.killpg(proc.pid, signal.SIGTERM)
                 proc.wait(timeout=3)
 
-    def start_executor():
+    def start_executor(cancel_timeout_s=5.0):
         node.state = None
         p = launch('navcraft_mission', 'navigate_sequence_server_node', ['--ros-args',
                    '-p', 'server_timeout_s:=0.8', '-p', 'response_timeout_s:=0.6',
-                   '-p', 'cancel_timeout_s:=0.7', '-p', 'goal_timeout_s:=2.0'])
+                   '-p', f'cancel_timeout_s:={cancel_timeout_s}', '-p', 'goal_timeout_s:=2.0'])
         assert node.client.wait_for_server(timeout_sec=10)
         for client in node.controls.values():
             assert client.wait_for_service(timeout_sec=5)
@@ -199,7 +209,7 @@ def main():
             wait(lambda: node.state == 'SENDING')
             check('pause while acceptance pending', node.service('pause').message == 'PAUSING')
         finally:
-            # Release only after pause is acknowledged; do not spend the 0.7 s
+            # Release only after pause is acknowledged; do not spend the
             # cancellation budget on an unrelated fixed acceptance delay.
             node.acceptance_release.set()
         wait(lambda: node.state == 'PAUSED')
@@ -250,7 +260,9 @@ def main():
         check('late acceptance cancelled without clearing fault', node.active == 0 and node.state == 'FAULT')
         stop(proc)
         time.sleep(0.3)
-        proc = start_executor()
+        # Accelerate only the deliberate cancellation-timeout case. Successful
+        # cancellation uses the production 5 s budget, including DDS scheduling.
+        proc = start_executor(cancel_timeout_s=0.7)
         node.mode = 'ignore_cancel'
         h = node.submit()
         wait(lambda: node.state == 'RUNNING')
