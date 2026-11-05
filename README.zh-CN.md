@@ -174,7 +174,7 @@ ROS_DOMAIN_ID=188 python3 scripts/test_warehouse.py
 - 尚未完成 EKF 融合精度、全场景建图精度或公平的控制器性能排名。
 - Serial、UDP、mock、ros2_control 和 EKF 属于可选底盘入口；软件验收不能代替实车性能验证。
 - 门、电梯和充电桩属于场景资产；订单、车队调度、设施预约和自动充电工作流不在当前范围。
-- 已提供容器与托管 CI 定义，尚未验证其实际运行。
+- 托管 CI 自动执行构建、单元测试、Action 故障注入和 mock 底盘回归，各提交结果见 [Actions](https://github.com/Vitolearns/NavCraft/actions/workflows/ci.yml)。容器镜像实际运行尚未验证。
 
 ## 参与贡献
 

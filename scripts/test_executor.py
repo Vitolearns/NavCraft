@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import signal
 import subprocess
+import sys
 import threading
 import time
 
@@ -122,8 +123,22 @@ def main():
     processes = []
     checks = []
 
-    def check(name, condition):
-        assert condition, name
+    def snapshot(error=None, details=None):
+        return {'count': len(checks), 'passed': checks,
+                'state': node.state, 'recent_states': node.states[-20:],
+                'mock_mode': node.mode, 'mock_attempts': node.attempts,
+                'mock_active': node.active, 'error': error, 'details': details or {}}
+
+    def check(name, condition, details=None):
+        if not condition:
+            failure = snapshot(name, details)
+            (out / 'failure.json').write_text(json.dumps(failure, indent=2)+'\n')
+            message = json.dumps(failure, ensure_ascii=True)
+            print('FAIL', message, flush=True)
+            if os.environ.get('GITHUB_ACTIONS') == 'true':
+                escaped = message.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+                print('::error title=Action regression failed::'+escaped, flush=True)
+            raise AssertionError(message)
         checks.append(name)
         print('PASS', name, flush=True)
 
@@ -202,7 +217,11 @@ def main():
             node.mode, node.attempts = mode, 0
             h = node.submit()
             r = result(h.get_result_async())
-            check(mode, r.result.success == success and node.attempts == attempts)
+            details = {'expected_success': success, 'expected_attempts': attempts,
+                       'actual_success': r.result.success, 'actual_attempts': node.attempts,
+                       'action_status': r.status, 'message': r.result.message}
+            check(mode, r.status == (4 if success else 6) and
+                  r.result.success == success and node.attempts == attempts, details)
         node.mode = 'hold'
         h = node.submit()
         r = result(h.get_result_async(), 6)
@@ -269,8 +288,11 @@ def main():
         drive(x=3.0)
         check('velocity bounded', abs(velocity[-1]-0.5)<1e-6)
         stop(gate)
-        (out / 'result.json').write_text(json.dumps({'passed': checks, 'count': len(checks)}, indent=2)+'\n')
     finally:
+        error = sys.exc_info()[1]
+        report = snapshot(str(error) if error is not None else None)
+        report['success'] = error is None
+        (out / 'result.json').write_text(json.dumps(report, indent=2)+'\n')
         for proc, log in reversed(processes):
             stop(proc)
             log.close()

@@ -174,7 +174,7 @@ Choose unused ROS domains, isolated from any running demo. `bash scripts/validat
 - EKF fusion accuracy, whole-scene mapping accuracy, and a fair controller performance ranking have not been established.
 - Serial, UDP, mock, ros2_control, and EKF are optional chassis entries; software validation does not establish real-hardware performance.
 - Doors, lifts, and charging stations are scene assets. Order processing, fleet scheduling, facility reservations, and automatic charging workflows are outside the current scope.
-- Container and hosted CI definitions are provided; their execution has not yet been validated.
+- Hosted CI runs the build, unit tests, Action fault injection, and mock chassis regression; see [Actions](https://github.com/Vitolearns/NavCraft/actions/workflows/ci.yml) for the result of each commit. Container image execution has not yet been validated.
 
 ## Contributing
 

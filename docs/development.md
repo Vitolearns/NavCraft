@@ -120,3 +120,11 @@ python3 scripts/check_docs.py
 两张主图沿用浅蓝圆角流程图版式。新增节点先确认实际 launch 条件、话题与消费者，再安排连线；箭头不能穿过无关节点。另两张图分别维护每条数据链和 TF 发布责任，不能把 IMU/相机的存在画成默认已融合。使用 `python3 scripts/render_architecture.py --check` 可只检查生成结果而不改文件。
 
 提交前检查 `git diff --check` 与完整 diff，运行相关验证并更新 [验收记录](validation.md)。结果需注明执行日期、命令和覆盖范围。
+
+## GitHub Actions CI
+
+`.github/workflows/ci.yml` 在 main 推送、目标为 main 的 Pull Request 或手动触发时运行。标签推送不重复启动同一组检查；同一 ref 的新运行会取消旧运行。任务位于 GitHub 的临时 Ubuntu 24.04 runner，不会连接本机机器人。
+
+流水线依次检查文档与资源、安装 Jazzy 依赖、构建、运行 colcon 单元测试、Action 故障注入及 mock 底盘回归；当前不包含 Gazebo 仿真矩阵。单元测试通过不等于后续故障注入也通过。
+
+失败时先看报错步骤和断言上下文。任务回归会写出 `artifacts/navcraft-regression/result.json`，检查断言失败时另写 `failure.json`，包含实际 Action 状态、结果消息、期望/实际重试次数与最近执行状态。CI 无论成功失败都会尝试上传 `regression-<attempt>` 日志产物，保存 7 天。云端结果以对应提交的 Actions 运行记录为准，本地通过不能替代云端结果。

@@ -67,4 +67,4 @@ ROS_DOMAIN_ID=190 python3 scripts/test_lifecycle.py
 
 ## 结果适用范围
 
-建图验收检查 OccupancyGrid 生成，未评估全场景建图精度。跟踪验收检查运动、急停与唯一速度发布者，未完成公平算法性能比较。Serial、UDP 与 ros2_control 适配不代表实车验证；Docker 构建和托管 CI 尚未执行。仓库指标仅适用于指定路线、障碍和这次运行。
+建图验收检查 OccupancyGrid 生成，未评估全场景建图精度。跟踪验收检查运动、急停与唯一速度发布者，未完成公平算法性能比较。Serial、UDP 与 ros2_control 适配不代表实车验证；Docker 构建尚未验证；托管 CI 状态以 [Actions](https://github.com/Vitolearns/NavCraft/actions/workflows/ci.yml) 中对应提交的运行结果为准，覆盖构建、单元、任务故障注入和 mock 底盘，不覆盖 Gazebo 矩阵。仓库指标仅适用于指定路线、障碍和这次运行。

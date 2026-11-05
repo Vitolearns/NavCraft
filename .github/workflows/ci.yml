@@ -1,12 +1,21 @@
 name: ros2-ci
 on:
   push:
+    branches: [main]
   pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   build-and-regress:
     runs-on: ubuntu-24.04
+    timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Documentation and scene media integrity
         run: python3 scripts/check_docs.py
       - uses: ros-tooling/setup-ros@v0.7
@@ -26,3 +35,14 @@ jobs:
           source /opt/ros/jazzy/setup.bash
           source install-navcraft/local_setup.bash
           python3 scripts/test_mock_chassis.py
+      - name: Upload regression diagnostics
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: regression-${{ github.run_attempt }}
+          path: |
+            artifacts/navcraft-regression/
+            log-navcraft/
+            build-navcraft/**/test_results/
+          if-no-files-found: ignore
+          retention-days: 7

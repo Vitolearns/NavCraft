@@ -37,7 +37,7 @@ NavCraft agreement does not waive third-party license obligations.
 
 | Release | License offering | Status |
 |---|---|---|
-| [v0.1](https://github.com/Vitolearns/NavCraft/tree/v0.1) | MIT | Previously published; tag and prior grants preserved |
+| [v0.1](https://github.com/Vitolearns/NavCraft/tree/aa41aa73cb178fb8663678da0d5041fa3d431c51) | MIT | Previously published; original commit and prior grants preserved |
 | v0.2.0 | PolyForm Noncommercial 1.0.0 | License transition documented in [CHANGELOG](../CHANGELOG.md) |
 
 The original [v0.1 MIT license and copyright notice](../licenses/MIT-v0.1.txt)
@@ -45,7 +45,8 @@ are preserved for historical material. This change does **not** retroactively
 withdraw rights granted under MIT. Recipients may continue using and
 modifying material previously received under MIT according to that license,
 including for commercial purposes. Rewriting Git history or changing a tag
-would not erase those prior grants; the `v0.1` tag is therefore retained.
+would not erase those prior grants. The historical release remains identifiable
+by its original commit linked above.
 
 Where previously MIT-licensed material is identifiable in later versions,
 this license transition does not remove the rights already granted for that
@@ -82,6 +83,6 @@ requirements under their own terms.
 
 ### 历史版本与第三方范围
 
-已发布的 **v0.1 保持 MIT**，其标签、[原许可证与版权通知](../licenses/MIT-v0.1.txt)保留。本次变更不会追溯撤销此前授予的 MIT 权利；此前按 MIT 取得的内容，仍可依 MIT 使用、修改和商用。后续版本中可识别的旧 MIT 内容，也不会因此失去已有授权。保留旧 MIT 文本不表示新增加的内容自动获得 MIT 授权。
+已发布的 **v0.1 保持 MIT**，其历史提交及[原许可证与版权通知](../licenses/MIT-v0.1.txt)保留。本次变更不会追溯撤销此前授予的 MIT 权利；此前按 MIT 取得的内容，仍可依 MIT 使用、修改和商用。后续版本中可识别的旧 MIT 内容，也不会因此失去已有授权。保留旧 MIT 文本不表示新增加的内容自动获得 MIT 授权。
 
 第三方源码、依赖、工具和资源适用各自许可证。NavCraft 的许可变更不能替换 ROS 2、Nav2、Gazebo 等上游项目的条款，也不宣称拥有第三方内容的独占权。变更版本与范围见 [CHANGELOG](../CHANGELOG.md)。
