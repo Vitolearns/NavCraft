@@ -186,8 +186,8 @@ NavCraft 基于 [ROS 2](https://www.ros.org/)、[Nav2](https://docs.nav2.org/)�
 
 ## 许可证
 
-自 **v0.2.0** 起，本项目中有权按此条款提供的 NavCraft 原创内容采用 [PolyForm Noncommercial License 1.0.0](LICENSE)，SPDX 标识为 `PolyForm-Noncommercial-1.0.0`。这是包含非商业限制的源码可见许可，不属于 OSI 定义的开源许可证。
+NavCraft 原创内容采用 [PolyForm Noncommercial License 1.0.0](LICENSE)，SPDX 标识为 `PolyForm-Noncommercial-1.0.0`。这是包含非商业限制的源码可见许可，不属于 OSI 定义的开源许可证。
 
 允许的非商业用途、个人用途及教育、公共研究等机构的明确许可，以许可证全文为准。超出许可范围的商业用途须向 [维护者](https://github.com/Vitolearns) 取得单独书面授权，可先提交 [商业授权咨询](https://github.com/Vitolearns/NavCraft/issues/new?title=Commercial%20licensing%20inquiry)。
 
-已发布的 **v0.1 仍适用 MIT**，已有 MIT 授权不因本次变更而撤销；第三方内容仍适用各自许可证。详见 [许可范围与版本历史](docs/licensing.md)、[许可变更记录](CHANGELOG.md) 和 [通知](NOTICE)。
+第三方内容仍适用各自许可证。详见 [许可范围与版本历史](docs/licensing.md)、[许可变更记录](CHANGELOG.md) 和 [通知](NOTICE)。

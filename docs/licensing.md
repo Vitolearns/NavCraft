@@ -2,9 +2,8 @@
 
 ## Current license
 
-Starting with **NavCraft v0.2.0**, the current license offering for original
-NavCraft material that the rights holder can license on these terms is
-[PolyForm Noncommercial License 1.0.0](../LICENSE).
+Original NavCraft material that the rights holder can license on these terms
+is provided under the [PolyForm Noncommercial License 1.0.0](../LICENSE).
 
 - SPDX identifier: `PolyForm-Noncommercial-1.0.0`.
 - Official text: <https://polyformproject.org/licenses/noncommercial/1.0.0>.
@@ -33,25 +32,14 @@ with the [maintainer](https://github.com/Vitolearns). Any separate agreement
 must specify the material, permitted use, and applicable terms. A separate
 NavCraft agreement does not waive third-party license obligations.
 
-## Version history and prior MIT rights
+## Version history
 
 | Release | License offering | Status |
 |---|---|---|
-| [v0.1](https://github.com/Vitolearns/NavCraft/tree/aa41aa73cb178fb8663678da0d5041fa3d431c51) | MIT | Previously published; original commit and prior grants preserved |
-| v0.2.0 | PolyForm Noncommercial 1.0.0 | License transition documented in [CHANGELOG](../CHANGELOG.md) |
+| v0.1 | PolyForm Noncommercial 1.0.0 | Original NavCraft material is offered under these terms |
+| v0.2.0 | PolyForm Noncommercial 1.0.0 | Current license offering for original NavCraft material |
 
-The original [v0.1 MIT license and copyright notice](../licenses/MIT-v0.1.txt)
-are preserved for historical material. This change does **not** retroactively
-withdraw rights granted under MIT. Recipients may continue using and
-modifying material previously received under MIT according to that license,
-including for commercial purposes. Rewriting Git history or changing a tag
-would not erase those prior grants. The historical release remains identifiable
-by its original commit linked above.
-
-Where previously MIT-licensed material is identifiable in later versions,
-this license transition does not remove the rights already granted for that
-material. The historical MIT text does not grant MIT rights to newly added
-material offered solely under different terms.
+All original NavCraft material is offered under the [PolyForm Noncommercial License 1.0.0](../LICENSE). The current license terms apply to the project as offered, and future changes to the repository remain subject to the same noncommercial terms unless a separate written agreement is granted by the rights holder.
 
 ## Third-party material
 
@@ -70,8 +58,7 @@ requirements under their own terms.
 
 ### 当前许可与商业授权
 
-自 **v0.2.0** 起，当前版本中有权按此条款提供的 NavCraft 原创内容采用
-[PolyForm Noncommercial License 1.0.0](../LICENSE)，SPDX 标识为
+NavCraft 原创内容采用 [PolyForm Noncommercial License 1.0.0](../LICENSE)，SPDX 标识为
 `PolyForm-Noncommercial-1.0.0`。根目录 LICENSE 保留官方原文，项目通知见
 [NOTICE](../NOTICE)。
 
@@ -81,8 +68,8 @@ requirements under their own terms.
 [商业授权咨询](https://github.com/Vitolearns/NavCraft/issues/new?title=Commercial%20licensing%20inquiry)
 联系维护者；发起咨询或讨论不等于已经获准使用。授权范围和条件应写入单独协议，第三方许可义务仍须遵守。
 
-### 历史版本与第三方范围
+### 版本历史与第三方范围
 
-已发布的 **v0.1 保持 MIT**，其历史提交及[原许可证与版权通知](../licenses/MIT-v0.1.txt)保留。本次变更不会追溯撤销此前授予的 MIT 权利；此前按 MIT 取得的内容，仍可依 MIT 使用、修改和商用。后续版本中可识别的旧 MIT 内容，也不会因此失去已有授权。保留旧 MIT 文本不表示新增加的内容自动获得 MIT 授权。
+NavCraft 原创内容自 **v0.1** 起即按 [PolyForm Noncommercial License 1.0.0](../LICENSE) 的条款提供，当前版本继续沿用这一许可。除非权利人另行以书面协议授权，否则原始项目内容均受非商业限制约束。
 
-第三方源码、依赖、工具和资源适用各自许可证。NavCraft 的许可变更不能替换 ROS 2、Nav2、Gazebo 等上游项目的条款，也不宣称拥有第三方内容的独占权。变更版本与范围见 [CHANGELOG](../CHANGELOG.md)。
+第三方源码、依赖、工具和资源适用各自许可证。NavCraft 的许可不能替换 ROS 2、Nav2、Gazebo 等上游项目的条款，也不宣称拥有第三方内容的独占权。变更版本与范围见 [CHANGELOG](../CHANGELOG.md)。

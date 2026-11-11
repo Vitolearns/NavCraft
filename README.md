@@ -186,8 +186,8 @@ NavCraft builds on [ROS 2](https://www.ros.org/), [Nav2](https://docs.nav2.org/)
 
 ## License
 
-From **v0.2.0**, original NavCraft material that can be offered under these terms is provided under the [PolyForm Noncommercial License 1.0.0](LICENSE), SPDX identifier `PolyForm-Noncommercial-1.0.0`. This is a source-available license with noncommercial restrictions, rather than an OSI-approved open-source license.
+Original NavCraft material is provided under the [PolyForm Noncommercial License 1.0.0](LICENSE), SPDX identifier `PolyForm-Noncommercial-1.0.0`. This is a source-available license with noncommercial restrictions, rather than an OSI-approved open-source license.
 
 The full license governs permitted noncommercial and personal uses, including its explicit permissions for educational, public research, and other listed organizations. Commercial uses outside those permissions require separate written authorization from the [maintainer](https://github.com/Vitolearns). Start with a [commercial licensing inquiry](https://github.com/Vitolearns/NavCraft/issues/new?title=Commercial%20licensing%20inquiry).
 
-The published **v0.1 remains under MIT**; prior MIT grants are unaffected. Third-party material retains its own license. See [license scope and history](docs/licensing.md), the [changelog](CHANGELOG.md), and [notices](NOTICE).
+Third-party material retains its own license. See [license scope and history](docs/licensing.md), the [changelog](CHANGELOG.md), and [notices](NOTICE).
