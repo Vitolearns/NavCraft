@@ -1,133 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="2200" viewBox="0 0 1800 2200" role="img" aria-labelledby="title desc">
-<title id="title">NavCraft · 单车导航与控制总体架构</title>
-<desc id="desc">保留完整仓库与单车能力；导航、建图、独立跟踪每次只启用一条控制链。详细职责与源码见 docs/architecture.md。</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1170" viewBox="0 0 1440 1170" role="img" aria-labelledby="title desc">
+<title id="title">NavCraft · 总体架构</title>
+<desc id="desc">三种模式互斥运行，共用 Gazebo 仓库与差速机器人。详细职责与源码见 docs/architecture.md。</desc>
 <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M 1 1 L 8 5 L 1 9" fill="none" stroke="#91999f" stroke-width="1.7"/></marker></defs>
-<rect width="1800" height="2200" fill="#fcfdff"/>
+<rect width="1440" height="1170" fill="#fcfdff"/>
 <g font-family="Noto Sans CJK SC,Microsoft YaHei,Droid Sans Fallback,DejaVu Sans,sans-serif">
-<text x="900" y="55" font-size="34" font-weight="700" fill="#00569b" text-anchor="middle">NavCraft · 单车导航与控制总体架构</text>
-<text x="900" y="96" font-size="21" font-weight="400" fill="#536c7f" text-anchor="middle">保留完整仓库与单车能力；导航、建图、独立跟踪每次只启用一条控制链</text>
-<rect x="40" y="160" width="1010" height="455" rx="14" fill="#f5f7f9" stroke="#d9dfe4" stroke-width="2"/>
-<rect x="350" y="1100" width="1400" height="275" rx="14" fill="#f5f7f9" stroke="#d9dfe4" stroke-width="2"/>
-<path d="M 210 355 L 210 440" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<path d="M 530 355 L 530 440" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<path d="M 860 355 L 860 440" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<path d="M 530 570 L 530 655" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<path d="M 860 570 L 860 655" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<path d="M 1450 285 L 1450 385" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<path d="M 1450 535 L 1450 992 Q 1450 1005 1437 1005 L 743 1005 Q 730 1005 730 1018 L 730 1170" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)" stroke-dasharray="9 7"/>
-<path d="M 1450 535 L 1450 992 Q 1450 1005 1437 1005 L 1203 1005 Q 1190 1005 1190 1018 L 1190 1170" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)" stroke-dasharray="9 7"/>
-<path d="M 1450 535 L 1450 992 Q 1450 1005 1463 1005 L 1617 1005 Q 1630 1005 1630 1018 L 1630 1170" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)" stroke-dasharray="9 7"/>
-<path d="M 210 570 L 210 777 Q 210 790 197 790 L 63 790 Q 50 790 50 803 L 50 1027 Q 50 1040 63 1040 L 447 1040 Q 460 1040 460 1053 L 460 1170" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<path d="M 210 570 L 210 777 Q 210 790 197 790 L 63 790 Q 50 790 50 803 L 50 1027 Q 50 1040 63 1040 L 897 1040 Q 910 1040 910 1053 L 910 1170" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<path d="M 245 965 L 245 1047 Q 245 1060 258 1060 L 527 1060 Q 540 1060 540 1073 L 540 1170" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<path d="M 245 965 L 245 1047 Q 245 1060 258 1060 L 997 1060 Q 1010 1060 1010 1073 L 1010 1170" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<path d="M 245 965 L 245 1047 Q 245 1060 258 1060 L 1417 1060 Q 1430 1060 1430 1073 L 1430 1170" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<path d="M 745 965 L 745 1067 Q 745 1080 732 1080 L 643 1080 Q 630 1080 630 1093 L 630 1170" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<path d="M 745 965 L 745 1067 Q 745 1080 758 1080 L 1087 1080 Q 1100 1080 1100 1093 L 1100 1170" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<path d="M 595 1340 L 595 1480" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<path d="M 1500 1340 L 1500 1480" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<path d="M 1250 1548 L 1300 1548" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<path d="M 595 1680 L 595 1727 Q 595 1740 608 1740 L 947 1740 Q 960 1740 960 1753 L 960 1810" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<path d="M 1500 1680 L 1500 1727 Q 1500 1740 1487 1740 L 1393 1740 Q 1380 1740 1380 1753 L 1380 1810" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<path d="M 1170 1920 L 1170 2000" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<path d="M 390 1250 L 343 1250 Q 330 1250 330 1263 L 330 1810" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<path d="M 820 2067 L 38 2067 Q 25 2067 25 2054 L 25 407.5 Q 25 400 32.5 400 L 40 400" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
-<rect x="70" y="230" width="280" height="125" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
-<text x="210" y="267.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">激光雷达</text>
-<text x="210" y="307.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">gpu_lidar · 10 Hz</text>
-<text x="210" y="336.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">360 点 · 0.08–12 m</text>
-<rect x="390" y="230" width="280" height="125" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
-<text x="530" y="267.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">IMU</text>
-<text x="530" y="307.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">imu · 100 Hz</text>
-<text x="530" y="336.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">姿态与惯性观测</text>
-<rect x="710" y="230" width="300" height="125" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
-<text x="860" y="267.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">相机</text>
-<text x="860" y="307.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">15 Hz · 640×480</text>
-<text x="860" y="336.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">默认开启</text>
-<rect x="70" y="440" width="280" height="130" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
-<text x="210" y="480" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">激光规范与过滤</text>
-<text x="210" y="520" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">/sim/scan → /scan</text>
-<text x="210" y="549" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">lidar_link</text>
-<rect x="390" y="440" width="280" height="130" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
-<text x="530" y="480" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">IMU 帧名适配</text>
-<text x="530" y="520" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">/sim/imu → /imu/data</text>
-<text x="530" y="549" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">仅规范 imu_link</text>
-<rect x="710" y="440" width="300" height="130" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
-<text x="860" y="480" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">图像桥接</text>
-<text x="860" y="520" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">/sim/camera/image</text>
-<text x="860" y="549" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">无视觉处理节点</text>
-<rect x="400" y="655" width="610" height="110" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
-<text x="705" y="699.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">IMU / 相机：观察与验收</text>
-<text x="705" y="739.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">未接入默认 AMCL、Nav2 或两套 SLAM</text>
-<rect x="1170" y="170" width="560" height="115" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
-<text x="1450" y="217" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">演示入口 demo.sh</text>
-<text x="1450" y="257" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">up 启动；warehouse / run 才提交导航任务</text>
-<rect x="1170" y="385" width="560" height="150" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
-<text x="1450" y="435" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">启动编排 navcraft_bringup</text>
-<text x="1450" y="475" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">launch_demo.py → navcraft.launch.py</text>
-<text x="1450" y="504" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">ROS 域锁 · Gazebo 分区 · 子进程回收</text>
-<rect x="70" y="820" width="350" height="145" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
-<text x="245" y="867.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">轮式里程计 /odom</text>
-<text x="245" y="907.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">DiffDrive → odom 适配</text>
-<text x="245" y="936.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">输出平面位姿与速度</text>
-<rect x="480" y="820" width="530" height="145" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
-<text x="745" y="867.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">TF 坐标关系</text>
-<text x="745" y="907.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">odom → base_footprint + URDF 安装 TF</text>
-<text x="745" y="936.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">map → odom 由定位 / 建图分支负责</text>
-<rect x="390" y="1170" width="410" height="170" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
-<text x="595" y="1230" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">导航模式</text>
-<text x="595" y="1270" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">有限航点任务 → AMCL + Nav2</text>
-<text x="595" y="1299" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">激光、odom 与 TF；已有地图</text>
-<rect x="850" y="1170" width="400" height="170" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
-<text x="1050" y="1215.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">建图模式</text>
-<text x="1050" y="1255.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">SLAM Toolbox / Cartographer</text>
-<text x="1050" y="1284.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">激光 + odom / TF → /map</text>
-<text x="1050" y="1313.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">只建图；探索运动来自遥控</text>
-<rect x="1300" y="1170" width="400" height="170" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
-<text x="1500" y="1215.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">独立跟踪模式</text>
-<text x="1500" y="1255.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">Pure Pursuit / Stanley</text>
-<text x="1500" y="1284.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">/reference_path + /odom</text>
-<text x="1500" y="1313.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">无全局规划、无激光避障</text>
-<rect x="390" y="1480" width="410" height="200" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
-<text x="595" y="1524.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">导航速度保护</text>
-<text x="595" y="1556.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">navcraft_safety</text>
-<text x="595" y="1596.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">RUNNING 状态 · 300 ms 新鲜度</text>
-<text x="595" y="1625.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">锁存急停 /emergency_stop</text>
-<text x="595" y="1654.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">限速 ±0.5 m/s、±1.2 rad/s</text>
-<rect x="850" y="1480" width="400" height="135" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
-<text x="1050" y="1522.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">人工遥控</text>
-<text x="1050" y="1562.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">键盘 /teleop_cmd_vel</text>
-<text x="1050" y="1591.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">用于建图，也可接管独立跟踪</text>
-<rect x="1300" y="1480" width="400" height="200" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
-<text x="1500" y="1540.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">实验仲裁与速度保护</text>
-<text x="1500" y="1580.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">twist_mux → /muxed_cmd_vel</text>
-<text x="1500" y="1609.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">navcraft_teleop 速度门</text>
-<text x="1500" y="1638.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">急停 /enable_emergency_stop</text>
-<rect x="820" y="1810" width="700" height="110" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
-<text x="1170" y="1854.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">唯一最终速度输出 /cmd_vel</text>
-<text x="1170" y="1894.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">导航门或实验门，按模式互斥发布</text>
-<rect x="820" y="2000" width="700" height="135" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
-<text x="1170" y="2042.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">默认执行端：Gazebo 差速机器人</text>
-<text x="1170" y="2082.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">ros_gz_bridge → DiffDrive → 车轮运动</text>
-<text x="1170" y="2111.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">Serial / UDP / mock / ros2_control 为独立替代入口</text>
-<rect x="70" y="1810" width="560" height="140" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
-<text x="350" y="1855" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">RViz 可视化</text>
-<text x="350" y="1895" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">地图、定位、激光、全局路径与碰撞检查弧</text>
-<text x="350" y="1924" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">默认统一入口仅导航分支使用 use_rviz</text>
-<text x="545" y="199" font-size="25" font-weight="700" fill="#3d5568" text-anchor="middle">传感器：分别产生数据，不等于全部参与导航</text>
-<text x="1050" y="1139" font-size="25" font-weight="700" fill="#3d5568" text-anchor="middle"></text>
-<text x="1050" y="1366" font-size="22" font-weight="400" fill="#536c7f" text-anchor="middle">三种互斥运行模式：mode = navigation / slam / tracking</text>
-<rect x="1371" y="697" width="158" height="38" rx="19" fill="#f6fbff" stroke="#cfdeeb" stroke-width="1.7"/>
-<text x="1450" y="723" font-size="21" font-weight="700" fill="#00569b" text-anchor="middle">mode 三选一</text>
-<rect x="162.5" y="692" width="95" height="38" rx="19" fill="#f6fbff" stroke="#cfdeeb" stroke-width="1.7"/>
-<text x="210" y="718" font-size="21" font-weight="700" fill="#00569b" text-anchor="middle">/scan</text>
-<rect x="470.5" y="1397" width="249" height="38" rx="19" fill="#f6fbff" stroke="#cfdeeb" stroke-width="1.7"/>
-<text x="595" y="1423" font-size="19" font-weight="700" fill="#00569b" text-anchor="middle">/nav2_cmd_vel + 状态</text>
-<rect x="1389" y="1397" width="222" height="38" rx="19" fill="#f6fbff" stroke="#cfdeeb" stroke-width="1.7"/>
-<text x="1500" y="1423" font-size="19" font-weight="700" fill="#00569b" text-anchor="middle">/tracking_cmd_vel</text>
-<rect x="233" y="2044" width="214" height="38" rx="19" fill="#f6fbff" stroke="#cfdeeb" stroke-width="1.7"/>
-<text x="340" y="2070" font-size="20" font-weight="700" fill="#00569b" text-anchor="middle">仿真观测与运动反馈</text>
-<text x="1060" y="1708" font-size="19" font-weight="400" fill="#536c7f" text-anchor="middle">SLAM 输出地图，人工遥控提供运动速度</text>
-<text x="900" y="2173" font-size="18" font-weight="400" fill="#64798b" text-anchor="middle">实线：数据 / 控制流    ·    虚线：启动选择 / 可选关系    ·    依据当前 launch 与配置</text>
+<text x="720" y="55" font-size="34" font-weight="700" fill="#00569b" text-anchor="middle">NavCraft · 总体架构</text>
+<text x="720" y="96" font-size="21" font-weight="400" fill="#536c7f" text-anchor="middle">三种模式互斥运行，共用 Gazebo 仓库与差速机器人</text>
+<rect x="40" y="310" width="420" height="535" rx="14" fill="#f5f7f9" stroke="#d9dfe4" stroke-width="2"/>
+<rect x="510" y="310" width="420" height="535" rx="14" fill="#f5f7f9" stroke="#d9dfe4" stroke-width="2"/>
+<rect x="980" y="310" width="420" height="535" rx="14" fill="#f5f7f9" stroke="#d9dfe4" stroke-width="2"/>
+<path d="M 720 240 L 720 262 Q 720 275 707 275 L 263 275 Q 250 275 250 288 L 250 310" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)" stroke-dasharray="9 7"/>
+<path d="M 720 240 L 720 310" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)" stroke-dasharray="9 7"/>
+<path d="M 720 240 L 720 262 Q 720 275 733 275 L 1177 275 Q 1190 275 1190 288 L 1190 310" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)" stroke-dasharray="9 7"/>
+<path d="M 250 505 L 250 700" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 720 655 L 720 700" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 1190 505 L 1190 700" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 250 825 L 250 872 Q 250 885 263 885 L 707 885 Q 720 885 720 898 L 720 955" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 720 825 L 720 955" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M 1190 825 L 1190 872 Q 1190 885 1177 885 L 733 885 Q 720 885 720 898 L 720 955" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<rect x="440" y="130" width="560" height="110" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="720" y="174.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">统一入口 · demo.sh up</text>
+<text x="720" y="214.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">navcraft_bringup · mode 三选一</text>
+<rect x="60" y="370" width="380" height="135" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="250" y="412.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">航点任务 · AMCL · Nav2</text>
+<text x="250" y="452.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">地图 + 激光 + 融合里程计</text>
+<text x="250" y="481.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">激光 / 深度避障，执行航点任务</text>
+<rect x="530" y="370" width="380" height="135" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="720" y="412.5" font-size="22.2222" font-weight="700" fill="#00569b" text-anchor="middle">SLAM Toolbox / Cartographer</text>
+<text x="720" y="452.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">/scan + odom / TF → /map</text>
+<text x="720" y="481.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">只建图，不产生运动速度</text>
+<rect x="1000" y="370" width="380" height="135" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="1190" y="412.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">Pure Pursuit / Stanley</text>
+<text x="1190" y="452.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">/reference_path + /odom</text>
+<text x="1190" y="481.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">跟随预设路径，无自主避障</text>
+<rect x="530" y="555" width="380" height="100" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="720" y="594.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">键盘遥控</text>
+<text x="720" y="634.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">/teleop_cmd_vel</text>
+<rect x="60" y="700" width="380" height="125" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="250" y="737.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">导航速度保护</text>
+<text x="250" y="777.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">navcraft_safety</text>
+<text x="250" y="806.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">任务状态 · 超时 · 急停</text>
+<rect x="530" y="700" width="380" height="125" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="720" y="737.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">仲裁与速度保护</text>
+<text x="720" y="777.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">twist_mux → navcraft_teleop</text>
+<text x="720" y="806.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">输入超时 · 急停</text>
+<rect x="1000" y="700" width="380" height="125" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="1190" y="737.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">仲裁与速度保护</text>
+<text x="1190" y="777.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">twist_mux → navcraft_teleop</text>
+<text x="1190" y="806.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">输入超时 · 急停</text>
+<rect x="240" y="955" width="960" height="125" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
+<text x="720" y="992.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">Gazebo 仓库 · 差速机器人</text>
+<text x="720" y="1032.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">/cmd_vel → ros_gz_bridge → DiffDrive</text>
+<text x="720" y="1061.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">导航反馈：轮速 + IMU → /odom · 激光 + 深度 → 代价地图</text>
+<text x="250" y="349" font-size="25" font-weight="700" fill="#3d5568" text-anchor="middle">navigation · 已有地图导航</text>
+<text x="720" y="349" font-size="25" font-weight="700" fill="#3d5568" text-anchor="middle">slam · 激光建图</text>
+<text x="1190" y="349" font-size="25" font-weight="700" fill="#3d5568" text-anchor="middle">tracking · 独立路径跟踪</text>
+<rect x="131" y="567" width="238" height="38" rx="19" fill="#f6fbff" stroke="#cfdeeb" stroke-width="1.7"/>
+<text x="250" y="593" font-size="18" font-weight="700" fill="#00569b" text-anchor="middle">/nav2_cmd_vel + 状态</text>
+<rect x="1079" y="567" width="222" height="38" rx="19" fill="#f6fbff" stroke="#cfdeeb" stroke-width="1.7"/>
+<text x="1190" y="593" font-size="19" font-weight="700" fill="#00569b" text-anchor="middle">/tracking_cmd_vel</text>
+<rect x="562.5" y="864" width="315" height="38" rx="19" fill="#f6fbff" stroke="#cfdeeb" stroke-width="1.7"/>
+<text x="720" y="890" font-size="21" font-weight="700" fill="#00569b" text-anchor="middle">/cmd_vel · 唯一最终发布者</text>
+<text x="720" y="1118" font-size="19" font-weight="400" fill="#536c7f" text-anchor="middle">建图与独立跟踪使用轮式里程计。Serial / UDP / mock / ros2_control 另行启动。</text>
+<text x="720" y="1143" font-size="18" font-weight="400" fill="#64798b" text-anchor="middle">实线：数据 / 控制流    ·    虚线：启动选择 / 可选关系    ·    依据当前 launch 与配置</text>
 </g></svg>

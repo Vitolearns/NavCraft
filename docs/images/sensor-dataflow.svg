@@ -57,28 +57,28 @@
 <text x="635" y="630" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">sensor_msgs/Imu</text>
 <rect x="880" y="500" width="380" height="175" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
 <text x="1070" y="564" font-size="23" font-weight="700" fill="#00569b" text-anchor="middle">imu_filter_node</text>
-<text x="1070" y="601" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">只改 frame_id 并转发</text>
+<text x="1070" y="601" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">规范帧，补全未知角速度方差</text>
 <text x="1070" y="630" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">/imu/data · imu_link</text>
 <rect x="1370" y="500" width="380" height="175" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
-<text x="1560" y="564" font-size="23" font-weight="700" fill="#00569b" text-anchor="middle">观察与传感器验收</text>
-<text x="1560" y="601" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">默认不做惯性融合</text>
-<text x="1560" y="630" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">没有去噪 / 偏置估计 / EKF</text>
+<text x="1560" y="564" font-size="23" font-weight="700" fill="#00569b" text-anchor="middle">默认导航 EKF</text>
+<text x="1560" y="601" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">偏航角速度 + 轮式速度</text>
+<text x="1560" y="630" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">/odom 与 odom TF</text>
 <rect x="50" y="775" width="330" height="175" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
-<text x="215" y="839" font-size="23" font-weight="700" fill="#00569b" text-anchor="middle">相机 camera</text>
+<text x="215" y="839" font-size="23" font-weight="700" fill="#00569b" text-anchor="middle">RGB-D 相机</text>
 <text x="215" y="876" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">15 Hz · 640×480</text>
 <text x="215" y="905" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">水平 FOV 1.2 rad</text>
 <rect x="460" y="775" width="350" height="175" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
 <text x="635" y="839" font-size="23" font-weight="700" fill="#00569b" text-anchor="middle">ros_gz_bridge</text>
-<text x="635" y="876" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">/sim/camera/image</text>
-<text x="635" y="905" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">sensor_msgs/Image</text>
+<text x="635" y="876" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">深度图 + CameraInfo</text>
+<text x="635" y="905" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">RGB 预览 /sim/camera/image</text>
 <rect x="880" y="775" width="380" height="175" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
-<text x="1070" y="839" font-size="23" font-weight="700" fill="#00569b" text-anchor="middle">图像消息直达 ROS</text>
-<text x="1070" y="876" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">camera_link</text>
-<text x="1070" y="905" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">没有视觉处理节点</text>
+<text x="1070" y="839" font-size="23" font-weight="700" fill="#00569b" text-anchor="middle">depthimage_to_laserscan</text>
+<text x="1070" y="876" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">中心扫描带 → /camera/scan</text>
+<text x="1070" y="905" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">平面扫描帧 camera_link</text>
 <rect x="1370" y="775" width="380" height="175" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
-<text x="1560" y="839" font-size="23" font-weight="700" fill="#00569b" text-anchor="middle">图像观察与帧检查</text>
-<text x="1560" y="876" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">无 CameraInfo 桥接</text>
-<text x="1560" y="905" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">未接入视觉 SLAM / 识别</text>
+<text x="1560" y="839" font-size="23" font-weight="700" fill="#00569b" text-anchor="middle">Nav2 障碍层</text>
+<text x="1560" y="876" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">前向深度与激光共同更新</text>
+<text x="1560" y="905" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">全局 / 局部代价地图</text>
 <rect x="50" y="1050" width="330" height="175" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
 <text x="215" y="1114" font-size="23" font-weight="700" fill="#00569b" text-anchor="middle">轮式里程计 DiffDrive</text>
 <text x="215" y="1151" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">轮半径 0.075 m</text>
@@ -89,8 +89,8 @@
 <text x="635" y="1180" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">nav_msgs/Odometry</text>
 <rect x="880" y="1050" width="380" height="175" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
 <text x="1070" y="1114" font-size="23" font-weight="700" fill="#00569b" text-anchor="middle">gazebo_odom_tf_node</text>
-<text x="1070" y="1151" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">平面投影 → /odom</text>
-<text x="1070" y="1180" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">发布 odom → base_footprint</text>
+<text x="1070" y="1151" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">导航 → /wheel/odom → EKF</text>
+<text x="1070" y="1180" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">建图 / 跟踪 → /odom 与 TF</text>
 <rect x="1370" y="1050" width="380" height="175" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
 <text x="1560" y="1114" font-size="23" font-weight="700" fill="#00569b" text-anchor="middle">运动估计与坐标反馈</text>
 <text x="1560" y="1151" font-size="20.7637" font-weight="400" fill="#00569b" text-anchor="middle">Nav2 / Cartographer / 独立跟踪</text>
@@ -128,7 +128,7 @@
 <text x="1560" y="1701" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">六站到站 / 绕障中心距离</text>
 <text x="1560" y="1730" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">同时记录 map 与 odom 差异</text>
 <rect x="200" y="1930" width="1400" height="155" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2" stroke-dasharray="8 6"/>
-<text x="900" y="1982.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">可选 EKF：独立 hardware_ekf.launch.py，默认仿真不启动</text>
+<text x="900" y="1982.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">可选硬件入口 · hardware_ekf.launch.py</text>
 <text x="900" y="2022.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">/wheel/odom + /imu/data → robot_localization/ekf_node → /odom 与 odom TF</text>
 <text x="900" y="2051.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">启用时关闭原始底盘 odom / TF 发布；不能与 Gazebo odom 适配叠加</text>
 <text x="215" y="165" font-size="24" font-weight="400" fill="#536c7f" text-anchor="middle">Gazebo / 数据来源</text>

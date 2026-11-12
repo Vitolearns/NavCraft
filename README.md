@@ -1,193 +1,131 @@
-<h1 align="center">NavCraft</h1>
+<h1 align="center"><img src="docs/images/warehouse-cover.svg" alt="NavCraft — warehouse map and six mission stops" width="100%"></h1>
 
-<p align="center"><strong>Autonomous navigation. Observable control. Reproducible simulation.</strong></p>
-<p align="center">A ROS 2 workspace for warehouse navigation, motion control, and path-tracking experiments.</p>
+<p align="center"><strong>Run a six-stop warehouse mission, map the aisles by hand, or compare two path-tracking controllers in Gazebo.</strong></p>
 
 <p align="center">
-  <img alt="ROS 2 Jazzy" src="https://img.shields.io/badge/ROS_2-Jazzy-22314E?style=flat-square">
-  <img alt="Gazebo Harmonic" src="https://img.shields.io/badge/Gazebo-Harmonic-ED8B00?style=flat-square">
-  <img alt="Ubuntu 24.04" src="https://img.shields.io/badge/Ubuntu-24.04-E95420?style=flat-square">
-  <img alt="Release v0.2.0" src="https://img.shields.io/badge/release-v0.2.0-2563EB?style=flat-square">
-  <img alt="License: PolyForm Noncommercial 1.0.0" src="https://img.shields.io/badge/license-PolyForm_Noncommercial-7C3AED?style=flat-square">
+  <a href="https://docs.ros.org/en/jazzy/"><img alt="ROS 2 Jazzy" src="docs/images/badge-ros.svg"></a>
+  <a href="https://gazebosim.org/docs/harmonic/"><img alt="Gazebo Harmonic" src="docs/images/badge-gazebo.svg"></a>
+  <a href="https://releases.ubuntu.com/24.04/"><img alt="Ubuntu 24.04" src="docs/images/badge-ubuntu.svg"></a>
+  <a href="https://github.com/Vitolearns/NavCraft/tags"><img alt="NavCraft version" src="docs/images/badge-version.svg"></a>
+  <a href="LICENSE"><img alt="PolyForm Noncommercial 1.0.0" src="docs/images/badge-license.svg"></a>
 </p>
 
-<p align="center"><strong>English</strong> · <a href="README.zh-CN.md">简体中文</a></p>
+<p align="center"><a href="#build">Build</a> &nbsp;·&nbsp; <a href="#run">Run a mode</a> &nbsp;·&nbsp; <a href="#architecture">Architecture</a> &nbsp;·&nbsp; <a href="docs/validation.md">Validation</a> &nbsp;·&nbsp; <a href="README.zh-CN.md">简体中文</a></p>
 
-[Quick start](#quick-start) · [Warehouse demo](#warehouse-demo) · [Architecture](#architecture) · [Documentation](#documentation) · [Validation](#validation)
+Nav2 provides localization, planning, and navigation control. NavCraft adds waypoint missions, pause/resume and cancellation, velocity protection, standalone Pure Pursuit / Stanley controllers, and reproducible simulation checks.
 
----
+## Architecture
 
-NavCraft brings localization, planning, control, and mission execution into a single-robot warehouse simulation. Send a six-stop mission, introduce a physical obstacle, inspect the replanned path, and pause or cancel execution while observing the robot's actual motion.
+![NavCraft architecture: three mutually exclusive modes sharing a simulated robot](docs/images/architecture-overview.svg)
 
-Built on **ROS 2 Jazzy, Nav2, and Gazebo Harmonic**, it combines a known-map navigation stack with mission state handling, velocity protection, isolated launch modes, and independent arrival checks. Separate modes support **SLAM Toolbox / Cartographer** mapping and **Pure Pursuit / Stanley** tracking experiments.
+Each mode has one final `/cmd_vel` publisher. Navigation uses `navcraft_safety`; mapping and tracking use `twist_mux` and `navcraft_teleop`. In navigation mode, a planar EKF combines wheel motion and the IMU yaw rate into `/odom`. Nav2 combines the lidar scan and forward RGB-D camera depth in both obstacle maps. See [architecture and data paths](docs/architecture.md) for details.
 
-> **License:** From `v0.2.0`, NavCraft is source-available under [PolyForm Noncommercial 1.0.0](LICENSE). Commercial uses outside its permissions require separate written authorization. See [licensing details](docs/licensing.md).
+## Build
 
-## Highlights
-
-- **A warehouse worth navigating.** Shelves, workstations, intersecting aisles, and a six-stop route spanning receiving, storage, packing, dock approach, and home.
-- **Obstacle handling you can inspect.** A physical obstacle is observed by the laser, enters the costmap, and triggers replanning; the warehouse test checks the robot's path and arrival against Gazebo world pose.
-- **Mission control beyond sending goals.** A finite waypoint executor handles asynchronous Actions, pause/resume, cancellation, late callbacks, and failure states. A downstream velocity gate checks execution state and command freshness.
-- **One active control chain.** Navigation, mapping, and tracking run as separate modes, with one final velocity publisher and one chassis path per ROS domain.
-- **Tracking algorithms with visible internals.** Standalone Pure Pursuit and Stanley implementations expose path-following behavior and export CSV/JSON metrics.
-- **A workspace you can extend.** Thirteen ROS packages separate interfaces, simulation, navigation, control, sensors, chassis adapters, diagnostics, and evaluation.
-
-## Quick start
-
-### 1. Build the workspace
-
-Start with Ubuntu 24.04 or WSL with **ROS 2 Jazzy, Gazebo Harmonic, and rosdep** installed. Run in Bash:
+Use **Ubuntu 24.04**, natively or in WSL2, with **ROS 2 Jazzy, Gazebo Harmonic, rosdep, colcon, and C++ build tools** installed. Run all commands in Bash:
 
 ```bash
-git clone https://github.com/Vitolearns/navcraft.git
+git clone https://github.com/Vitolearns/NavCraft.git navcraft
 cd navcraft
 source /opt/ros/jazzy/setup.bash
-rosdep install --from-paths src --ignore-src -r -y
+# First rosdep use on this machine: run sudo rosdep init once.
+rosdep update
+rosdep install --from-paths src --ignore-src -r -y --rosdistro jazzy
 bash scripts/build_ws.sh
 ```
 
-Already have the sources? Use your checkout directory. Build and installation outputs are generated locally.
+The build script generates the warehouse map and builds all 13 packages. Outputs go to `build-navcraft/`, `install-navcraft/`, and `log-navcraft/`. If you already have the sources, use that checkout instead of cloning again.
 
-### 2. Launch the warehouse
+## Run
+
+| Mode | Use it for | Main components |
+|---|---|---|
+| `navigation` (default) | Navigate an existing map, avoid obstacles, and execute waypoint missions | Wheel/IMU EKF + AMCL + Nav2 + mission executor |
+| `slam` | Drive the robot manually to build a map | SLAM Toolbox or Cartographer + keyboard control |
+| `tracking` | Follow a predefined path and record tracking errors | Standalone Pure Pursuit or Stanley |
+
+Run commands from the project root. **Start one mode at a time**; stop it with Ctrl+C in its launch terminal and wait for cleanup before switching. The default ROS domain is `73`; custom `ROS_DOMAIN_ID` values must match across terminals. `demo.sh` loads the ROS environment and sets `GZ_PARTITION` automatically.
+
+### 1. Navigation
+
+Terminal 1 — start Gazebo and RViz:
 
 ```bash
-bash scripts/demo.sh up gui:=true use_rviz:=true
+bash scripts/demo.sh up mode:=navigation gui:=true use_rviz:=true
 ```
 
-Keep this terminal running. In a second Bash terminal, enter the project root and submit the mission:
+Terminal 2 — submit a six-stop warehouse mission:
 
 ```bash
 bash scripts/demo.sh warehouse
 ```
 
-**`up` starts the system; `warehouse` starts the six-stop mission.** For a shorter two-waypoint run, use `bash scripts/demo.sh run`. Submit one mission at a time.
+**Starting the system does not submit a mission.** The route visits receiving, storage B, storage A, packing, dock approach, and home. Use `bash scripts/demo.sh run` for a shorter two-waypoint run.
 
-Without a display, launch with `gui:=false use_rviz:=false`. Stop the system with Ctrl+C in the launch terminal and wait for process cleanup.
-
-## Warehouse demo
-
-The six-stop mission moves through **receiving → storage B → storage A → packing → dock approach → home**. RViz exposes the map, localization, scan, planned path, and controller visualization alongside the Gazebo scene.
-
-From another terminal in the project root:
-
-| Operation | Command |
+| During a mission | Command |
 |---|---|
-| Observe execution state | `bash scripts/demo.sh status` |
-| Pause / resume | `bash scripts/demo.sh pause` / `resume` |
-| Cancel the current mission | `bash scripts/demo.sh cancel` |
-| Engage / release navigation emergency stop | `bash scripts/demo.sh estop` / `release` |
-| Insert / remove a physical obstacle | `bash scripts/demo.sh obstacle block` / `clear` |
+| Pause / resume | `bash scripts/demo.sh pause` / `bash scripts/demo.sh resume` |
+| Cancel | `bash scripts/demo.sh cancel` |
+| Watch state | `bash scripts/demo.sh status` (Ctrl+C to stop watching) |
 
-`status` streams until Ctrl+C. The mission command does not insert obstacles automatically. The manual obstacle has a fixed position at `(-1.5, 0)`; insert it before departure to avoid spawning it inside the robot. The [warehouse guide](docs/warehouse-demo.md) covers route coordinates, automated injection, and the independent validation criteria.
+For headless operation, set `gui:=false use_rviz:=false`. Route coordinates, obstacle insertion, and emergency-stop commands are in the [operating guide](docs/development.md#仓库导航与障碍演示).
 
-The default ROS domain is `73`. The demo configures `GZ_PARTITION=navcraft-73`, local discovery, and a domain lock. If you change `ROS_DOMAIN_ID`, use the same value in every control terminal.
+### 2. SLAM
 
-## Architecture
-
-![NavCraft system architecture](docs/images/architecture-overview.svg)
-
-The default navigation chain runs from the waypoint executor through Nav2 and the navigation velocity gate to Gazebo DiffDrive. Mapping and standalone tracking use their own arbitration chain. **Only one mode runs at a time.**
-
-Default navigation consumes laser scans, wheel odometry, and TF. IMU and camera data are available for inspection, but are not fused into default navigation. Gazebo world pose is reserved for independent validation and never feeds navigation localization.
-
-<details>
-<summary><strong>Explore the data paths and validation boundary</strong></summary>
-
-### Warehouse navigation and independent validation
-
-![Warehouse navigation](docs/images/warehouse-navigation.svg)
-
-### Sensor data paths
-
-![Sensor data paths](docs/images/sensor-dataflow.svg)
-
-### TF ownership
-
-![TF ownership](docs/images/tf-ownership.svg)
-
-</details>
-
-See the [architecture guide](docs/architecture.md) for all 13 package responsibilities, launch boundaries, and source references.
-
-## Mapping and tracking
-
-Stop the active mode before starting another. Choose one entry:
+Terminal 1 — start mapping; replace `slam_toolbox` with `cartographer` to use the other backend:
 
 ```bash
-# Mapping: teleoperate the robot to explore the scene
 bash scripts/demo.sh up mode:=slam slam_mode:=slam_toolbox gui:=true
-bash scripts/demo.sh up mode:=slam slam_mode:=cartographer gui:=true
-
-# Tracking: follow a predefined path with a standalone controller
-bash scripts/demo.sh up mode:=tracking controller:=pure_pursuit gui:=true
-bash scripts/demo.sh up mode:=tracking controller:=stanley gui:=true
 ```
 
-Mapping does not drive the robot automatically. Standalone tracking does not include global planning or laser-based obstacle avoidance. Cartographer currently runs without IMU input.
+Terminal 2 — load the environment and drive the robot:
 
-SLAM and tracking use `/enable_emergency_stop`; `demo.sh estop/release` target navigation mode. The unified `use_rviz` option currently applies only to navigation. Teleoperation, map saving, path configuration, and metrics are documented in the [development guide](docs/development.md).
+```bash
+source /opt/ros/jazzy/setup.bash
+source install-navcraft/local_setup.bash
+export ROS_DOMAIN_ID=73
+export ROS_AUTOMATIC_DISCOVERY_RANGE=LOCALHOST
+ros2 run navcraft_teleop keyboard_teleop_node --ros-args -p topic:=/teleop_cmd_vel
+```
 
-## Documentation
+W/S changes forward speed; A/D changes turning speed; X or Space stops; Q stops and exits. **Releasing a key does not stop the robot.** Mapping itself does not drive or avoid obstacles. After stopping and exiting keyboard control, save the map in the same terminal while SLAM is still running:
 
-| Start here | What you will find |
-|---|---|
-| [Architecture](docs/architecture.md) | Package responsibilities, control chains, and source map |
-| [Sensors and TF](docs/sensors-and-tf.md) | Sources, rates, topics, consumers, and transform ownership |
-| [Warehouse demo](docs/warehouse-demo.md) | Route, physical obstacle, and world-pose arrival checks |
-| [Development](docs/development.md) | Configuration, optional launches, troubleshooting, and cleanup |
-| [Validation](docs/validation.md) | Reproduction commands, dated results, and coverage limits |
-| [Project walkthrough](docs/project-guide.md) | Engineering choices and a guided explanation of the system |
-| [Licensing](docs/licensing.md) | Noncommercial terms, commercial permission, prior MIT grants, and third-party scope |
+```bash
+bash scripts/save_map.sh my_map artifacts/maps
+```
 
-Detailed guides and diagram labels are currently in Chinese. [简体中文首页](README.zh-CN.md) provides the same entry points.
+This writes `my_map.yaml` and `my_map.pgm`; it does not switch Nav2 to the new map. Cartographer currently runs without IMU input.
 
-Source lives in `src/`; build, demo, and validation tools live in `scripts/`. `docker/` and `.github/` contain container and CI definitions. Generated `build-navcraft/`, `install-navcraft/`, `log-navcraft/`, and `artifacts/` directories stay outside Git.
+### 3. Path tracking
 
-## Validation
+Start Pure Pursuit, or replace `pure_pursuit` with `stanley`:
 
-Validation covers **simulation and software mocks**. The recorded `v0.1` baseline includes:
+```bash
+bash scripts/demo.sh up mode:=tracking controller:=pure_pursuit gui:=true
+```
 
-| Check | Recorded result |
-|---|---|
-| Workspace build | 13 packages built |
-| colcon tests | 108 tests, zero failures |
-| Mission and velocity protection | 37 checks passed |
-| Basic Gazebo navigation and sensors | 16 checks passed |
-| Warehouse route and obstacle handling | 26 checks passed |
+The robot follows the bundled [demo path](src/navcraft_evaluation/paths/demo_path.txt) in the `odom` frame. This mode has **no global planning or laser-based obstacle avoidance**. Samples are written to `/tmp/navcraft_tracking.csv`; a summary is written to `/tmp/navcraft_tracking.json` on normal shutdown. Output paths and custom path configuration are covered in the [operating guide](docs/development.md#参数与入口).
 
-These checks were run in separate validation rounds; commands, dates, measurements, and scope are recorded in [validation.md](docs/validation.md). To reproduce after building:
+The unified `use_rviz` option applies only to navigation. SLAM and tracking use `/enable_emergency_stop`; `demo.sh estop/release` apply to navigation. See [mode controls](docs/development.md#模式与急停).
+
+## Development and documentation
+
+`src/` contains the ROS packages; `scripts/` contains build, demo, and validation tools. After building, run:
 
 ```bash
 python3 scripts/check_docs.py
 bash scripts/test.sh
-source /opt/ros/jazzy/setup.bash
-source install-navcraft/local_setup.bash
-ROS_DOMAIN_ID=187 python3 scripts/test_simulation.py
-ROS_DOMAIN_ID=188 python3 scripts/test_warehouse.py
 ```
 
-Choose unused ROS domains, isolated from any running demo. `bash scripts/validate.sh` runs the full 13-group baseline; the warehouse test runs separately.
+| Guide | Contents |
+|---|---|
+| [Architecture](docs/architecture.md) | Package responsibilities, control chains, sensors, and TF |
+| [Development and operation](docs/development.md) | Warehouse demo, parameters, optional backends, and troubleshooting |
+| [Validation](docs/validation.md) | Simulation commands, dated results, evidence, and coverage limits |
+| [Licensing](docs/licensing.md) | License scope, commercial permission, and third-party notices |
 
-### Current boundaries
-
-- Wheel odometry diverges noticeably from world position; it is not arrival ground truth.
-- EKF fusion accuracy, whole-scene mapping accuracy, and a fair controller performance ranking have not been established.
-- Serial, UDP, mock, ros2_control, and EKF are optional chassis entries; software validation does not establish real-hardware performance.
-- Doors, lifts, and charging stations are scene assets. Order processing, fleet scheduling, facility reservations, and automatic charging workflows are outside the current scope.
-- Hosted CI runs the build, unit tests, Action fault injection, and mock chassis regression; see [Actions](https://github.com/Vitolearns/NavCraft/actions/workflows/ci.yml) for the result of each commit. Container image execution has not yet been validated.
-
-## Contributing
-
-Bug reports and focused improvements are welcome. Include your environment, active mode, reproduction command, expected behavior, and relevant logs. For changes, start with the [development guide](docs/development.md), run the checks appropriate to the affected module, and update the related documentation.
-
-## Acknowledgments
-
-NavCraft builds on [ROS 2](https://www.ros.org/), [Nav2](https://docs.nav2.org/), [Gazebo](https://gazebosim.org/), [SLAM Toolbox](https://github.com/SteveMacenski/slam_toolbox), [Cartographer](https://github.com/ros2/cartographer), [ros2_control](https://control.ros.org/), and [twist_mux](https://github.com/ros-teleop/twist_mux). Navigation algorithms primarily come from Nav2; this repository focuses on integration, mission execution, velocity protection, standalone tracking, and reproducible evaluation.
+Detailed guides are in Chinese. Validation covers simulation and software mocks; it does not establish real-hardware performance, mapping accuracy, or a controller ranking. The project focuses on a single robot; fleet scheduling, facility automation, and charging workflows are outside its scope.
 
 ## License
 
-Original NavCraft material is provided under the [PolyForm Noncommercial License 1.0.0](LICENSE), SPDX identifier `PolyForm-Noncommercial-1.0.0`. This is a source-available license with noncommercial restrictions, rather than an OSI-approved open-source license.
-
-The full license governs permitted noncommercial and personal uses, including its explicit permissions for educational, public research, and other listed organizations. Commercial uses outside those permissions require separate written authorization from the [maintainer](https://github.com/Vitolearns). Start with a [commercial licensing inquiry](https://github.com/Vitolearns/NavCraft/issues/new?title=Commercial%20licensing%20inquiry).
-
-Third-party material retains its own license. See [license scope and history](docs/licensing.md), the [changelog](CHANGELOG.md), and [notices](NOTICE).
+NavCraft is source-available under [PolyForm Noncommercial 1.0.0](LICENSE). Uses outside the license's permissions require separate written authorization. See [licensing](docs/licensing.md) and [NOTICE](NOTICE); third-party components retain their own licenses.

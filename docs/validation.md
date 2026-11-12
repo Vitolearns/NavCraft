@@ -2,6 +2,19 @@
 
 环境：Ubuntu 24.04 / ROS 2 Jazzy / Gazebo Harmonic。构建使用 Jazzy underlay；生成目录为 `build-navcraft/`、`install-navcraft/`、`log-navcraft/` 和 `artifacts/`。
 
+## 默认导航传感器融合（2026-11-12）
+
+运行代码为 `021d129`。在本地 Jazzy / Gazebo Harmonic 环境使用隔离 ROS 域验证。
+
+| 验证 | 结果 |
+|---|---|
+| 构建与软件回归 | 13 包编译通过。域 195 执行 `scripts/test.sh`，110 项 colcon 测试通过，0 跳过。37 项任务与速度保护检查、8 项 mock 底盘检查通过。 |
+| 轮速与 IMU | [EKF 回归](../src/navcraft_simulation/test/test_navigation_ekf.launch.py) 固定轮速，保持车轮报告的偏航角速度为零。陀螺仪输入从 +0.45 改为 −0.45 rad/s，滤波后的偏航角速度随之换向。 |
+| RGB-D 障碍检测 | 域 193 的 [基础仿真](../scripts/test_simulation.py) 通过 21 项检查。在车前放入 30 cm 高的箱子，二维激光从箱顶上方扫过。相机深度让两张代价地图标记箱子，移开后两图均清除。双航点、暂停、恢复和取消均通过。 |
+| 其他模式 | 域 196 的 SLAM Toolbox 生成占据栅格地图，域 197 的 Gazebo Stanley 跟踪通过运动与急停检查。 |
+
+收货接近点从 `(-3.2, 0.0)` 移到 `(-3.2, 0.4)`，给低货箱旁的车体转向留出空间。更新后连续两次六站验收通过。最后一轮在域 199 执行 [仓库验收](../scripts/test_warehouse.py)，包括在线放障、重规划、六站到达和终点停车，共 26 项。六站最大世界坐标到点误差 **0.235 m**，地图坐标最大误差 **0.233 m**，两者的验收阈值均为 0.35 m。世界轨迹长 27.180 m，模型原点到动态障碍中心最近 0.647 m。
+
 ## 导航验收（2026-11-05）
 
 以下记录来自已完成的运行验收，范围为仿真与软件 mock。原始运行日志不随 v0.1 源码快照保留；测试脚本可重新生成日志、轨迹和 JSON 报告。
@@ -54,6 +67,8 @@ ROS_DOMAIN_ID=190 python3 scripts/test_lifecycle.py
 ```
 
 完整矩阵：`bash scripts/validate.sh`。`test_modes.py` 还支持 `navigation`、`pure_pursuit`、`stanley`、`gazebo_pure_pursuit`、`gazebo_stanley`、`slam_toolbox` 和 `cartographer`。可用 `--output artifacts/v0.1/<模式>` 指定模式结果目录。
+
+`test_warehouse.py` 自动启动无界面 Gazebo：先确认原始路径经过注入点，再在机器人开始移动且距注入点超过 0.9 米时放置障碍，检查代价地图、绕行、六站到达和最终停车。世界位姿以 20 Hz 采样，通过测试专用 `/warehouse_ground_truth` 桥接取得，不进入导航 `/tf`。每站检查数据新鲜度，要求世界坐标和地图坐标到目标的误差均低于 0.35 米；odom 偏差单独记录。障碍距离按模型原点到障碍中心计算，不是车身净间隙。脚本结束时清除障碍并回收仿真，失败不会保留旧成功报告。
 
 仓库输出 `artifacts/navcraft-warehouse/result.json` 与 `observations.json`，基础仿真输出 `artifacts/navcraft-simulation/`，任务保护输出 `artifacts/navcraft-regression/`。这些目录由测试生成，不是发布包中的预置报告。
 

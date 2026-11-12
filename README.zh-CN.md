@@ -1,193 +1,131 @@
-<h1 align="center">NavCraft</h1>
+<h1 align="center"><img src="docs/images/warehouse-cover.svg" alt="NavCraft — 仓库地图与六个任务站点" width="100%"></h1>
 
-<p align="center"><strong>自主导航 · 可观测控制 · 可复现仿真</strong></p>
-<p align="center">面向仓库场景的 ROS 2 自主导航、运动控制与路径跟踪实验平台。</p>
+<p align="center"><strong>在同一座 Gazebo 仓库中，运行六站导航任务、遥控建图，或比较两种路径跟踪器。</strong></p>
 
 <p align="center">
-  <img alt="ROS 2 Jazzy" src="https://img.shields.io/badge/ROS_2-Jazzy-22314E?style=flat-square">
-  <img alt="Gazebo Harmonic" src="https://img.shields.io/badge/Gazebo-Harmonic-ED8B00?style=flat-square">
-  <img alt="Ubuntu 24.04" src="https://img.shields.io/badge/Ubuntu-24.04-E95420?style=flat-square">
-  <img alt="Release v0.2.0" src="https://img.shields.io/badge/release-v0.2.0-2563EB?style=flat-square">
-  <img alt="License: PolyForm Noncommercial 1.0.0" src="https://img.shields.io/badge/license-PolyForm_Noncommercial-7C3AED?style=flat-square">
+  <a href="https://docs.ros.org/en/jazzy/"><img alt="ROS 2 Jazzy" src="docs/images/badge-ros.svg"></a>
+  <a href="https://gazebosim.org/docs/harmonic/"><img alt="Gazebo Harmonic" src="docs/images/badge-gazebo.svg"></a>
+  <a href="https://releases.ubuntu.com/24.04/"><img alt="Ubuntu 24.04" src="docs/images/badge-ubuntu.svg"></a>
+  <a href="https://github.com/Vitolearns/NavCraft/tags"><img alt="NavCraft version" src="docs/images/badge-version.svg"></a>
+  <a href="LICENSE"><img alt="PolyForm Noncommercial 1.0.0" src="docs/images/badge-license.svg"></a>
 </p>
 
-<p align="center"><a href="README.md">English</a> · <strong>简体中文</strong></p>
+<p align="center"><a href="#构建项目">构建</a> &nbsp;·&nbsp; <a href="#三种运行模式">运行模式</a> &nbsp;·&nbsp; <a href="#总体架构">总体架构</a> &nbsp;·&nbsp; <a href="docs/validation.md">验收记录</a> &nbsp;·&nbsp; <a href="README.md">English</a></p>
 
-[快速开始](#快速开始) · [仓库演示](#仓库演示) · [系统架构](#系统架构) · [文档导航](#文档导航) · [验证](#验证)
+Nav2 提供定位、规划与导航控制；NavCraft 实现航点任务、暂停/恢复与取消、速度保护、独立 Pure Pursuit / Stanley 跟踪器，以及可复现的仿真检查。
 
----
+## 总体架构
 
-NavCraft 将定位、规划、控制与任务执行组织到一个单车仓库仿真中。下发六站任务、放置实体障碍、观察路径重规划，再通过暂停和取消检查机器人实际运动，让导航过程可以运行、观察和验证。
+![NavCraft 总体架构：三种互斥模式与共用仿真底盘](docs/images/architecture-overview.svg)
 
-项目基于 **ROS 2 Jazzy、Nav2 与 Gazebo Harmonic**，集成已有地图导航、航点任务状态管理、速度保护、互斥启动模式和独立到站验收。另提供 **SLAM Toolbox / Cartographer** 建图，以及 **Pure Pursuit / Stanley** 独立跟踪实验。
+每种模式只有一个最终 `/cmd_vel` 发布者：导航使用 `navcraft_safety`，建图与跟踪使用 `twist_mux` 和 `navcraft_teleop`。默认导航用二维 EKF 融合轮速和 IMU 偏航角速度，输出 `/odom`。前向 RGB-D 相机的深度观测与激光共同更新 Nav2 的全局和局部代价地图。详细职责与数据链见 [架构文档](docs/architecture.md)。
 
-> **许可：** 自 `v0.2.0` 起，NavCraft 以 [PolyForm Noncommercial 1.0.0](LICENSE) 提供可查看的源码。超出该许可允许范围的商业使用，须取得单独书面授权。见 [许可说明](docs/licensing.md)。
+## 构建项目
 
-## 项目亮点
-
-- **复杂仓库中的导航。** 保留货架、工位与交叉通道，六站路线连接 receiving、storage、packing、dock 接近点与 home。
-- **可检查的障碍处理。** 实体障碍经激光进入代价地图并触发重规划；仓库测试使用 Gazebo 世界位姿独立检查实际轨迹与到站位置。
-- **完整的任务控制过程。** 有限航点执行器处理异步 Action、暂停/恢复、取消、迟到回调和故障状态；下游速度门检查执行状态与命令新鲜度。
-- **互斥的控制链。** 导航、建图和跟踪分模式启动，同一 ROS 域内保持唯一最终速度发布者与底盘路径。
-- **可深入理解的跟踪实现。** 独立 Pure Pursuit 与 Stanley 用于观察路径跟随行为，并导出 CSV/JSON 指标。
-- **职责明确的工作区。** 13 个 ROS 包分别组织接口、仿真、导航、控制、传感器、底盘适配、诊断和评估。
-
-## 快速开始
-
-### 1. 构建工作区
-
-准备 Ubuntu 24.04 或 WSL，并安装 **ROS 2 Jazzy、Gazebo Harmonic 与 rosdep**。在 Bash 中运行：
+使用原生或 WSL2 中的 **Ubuntu 24.04**，预先安装 **ROS 2 Jazzy、Gazebo Harmonic、rosdep、colcon 和 C++ 构建工具**。以下命令均在 Bash 中执行：
 
 ```bash
-git clone https://github.com/Vitolearns/navcraft.git
+git clone https://github.com/Vitolearns/NavCraft.git navcraft
 cd navcraft
 source /opt/ros/jazzy/setup.bash
-rosdep install --from-paths src --ignore-src -r -y
+# 本机首次使用 rosdep 时，先执行一次 sudo rosdep init。
+rosdep update
+rosdep install --from-paths src --ignore-src -r -y --rosdistro jazzy
 bash scripts/build_ws.sh
 ```
 
-已有源码时进入实际项目目录，无需重复克隆。构建和安装产物会在本机生成。
+构建脚本会生成仓库地图并编译全部 13 个包，产物位于 `build-navcraft/`、`install-navcraft/` 和 `log-navcraft/`。已有源码时进入实际项目目录，无需重复克隆。
 
-### 2. 启动仓库
+## 三种运行模式
+
+| 模式 | 用来做什么 | 主要组件 |
+|---|---|---|
+| `navigation`（默认） | 在已有地图中自主导航、避障和执行航点任务 | 轮速/IMU EKF + AMCL + Nav2 + 航点执行器 |
+| `slam` | 人工遥控探索场景，建立地图 | SLAM Toolbox 或 Cartographer + 键盘遥控 |
+| `tracking` | 跟随预设路径，记录跟踪误差 | 独立 Pure Pursuit 或 Stanley |
+
+所有命令从项目根目录执行。**一次只启动一种模式**；切换前在启动终端按 Ctrl+C，并等待进程回收。默认 `ROS_DOMAIN_ID=73`，自定义时各终端必须一致。`demo.sh` 自动加载 ROS 环境并设置 `GZ_PARTITION`。
+
+### 1. 已有地图导航
+
+终端 1：启动 Gazebo 和 RViz。
 
 ```bash
-bash scripts/demo.sh up gui:=true use_rviz:=true
+bash scripts/demo.sh up mode:=navigation gui:=true use_rviz:=true
 ```
 
-保持此终端运行，另开 Bash 并进入项目根目录，下发任务：
+终端 2：提交仓库六站任务。
 
 ```bash
 bash scripts/demo.sh warehouse
 ```
 
-**`up` 启动系统，`warehouse` 才开始六站任务。** 短距离双航点演示使用 `bash scripts/demo.sh run`。同一时刻只提交一项任务。
+**启动系统不会自动下发任务。** 六站依次为 receiving、storage B、storage A、packing、dock 接近点和 home。短距离双航点演示使用 `bash scripts/demo.sh run`。
 
-无显示环境可用 `gui:=false use_rviz:=false`。结束时在启动终端按 Ctrl+C，并等待进程回收。
-
-## 仓库演示
-
-六站顺序为 **receiving → storage B → storage A → packing → dock 接近点 → home**。可同时在 Gazebo 观察场景，在 RViz 查看地图、定位、激光、规划路径与控制器可视化。
-
-在其他终端进入项目根目录后操作：
-
-| 操作 | 命令 |
+| 运行中操作 | 命令 |
 |---|---|
-| 查看执行状态 | `bash scripts/demo.sh status` |
-| 暂停 / 恢复 | `bash scripts/demo.sh pause` / `resume` |
-| 取消当前任务 | `bash scripts/demo.sh cancel` |
-| 启用 / 解除导航急停 | `bash scripts/demo.sh estop` / `release` |
-| 放置 / 移除实体障碍 | `bash scripts/demo.sh obstacle block` / `clear` |
+| 暂停 / 恢复 | `bash scripts/demo.sh pause` / `bash scripts/demo.sh resume` |
+| 取消任务 | `bash scripts/demo.sh cancel` |
+| 查看状态 | `bash scripts/demo.sh status`（Ctrl+C 结束查看） |
 
-`status` 持续输出，Ctrl+C 结束查看。六站命令不会自动放置障碍；手动障碍固定在 `(-1.5, 0)`，建议出发前放置，避免生成在车身里。[仓库演示指南](docs/warehouse-demo.md) 说明路线坐标、自动障碍注入和独立验收判据。
+无界面运行使用 `gui:=false use_rviz:=false`。站点坐标、障碍放置和急停操作见 [运行指南](docs/development.md#仓库导航与障碍演示)。
 
-默认 `ROS_DOMAIN_ID=73`，demo 自动配置 `GZ_PARTITION=navcraft-73`、本机发现范围与域锁。修改 ROS 域后，所有控制终端也要设置相同的 `ROS_DOMAIN_ID`。
+### 2. 激光建图
 
-## 系统架构
-
-![NavCraft 总体架构](docs/images/architecture-overview.svg)
-
-默认导航由航点执行器调用 Nav2，经导航速度门向 Gazebo DiffDrive 输出速度。建图与独立跟踪使用各自的实验仲裁链。**三种模式每次只运行一种。**
-
-默认导航使用激光、轮式里程计与 TF。IMU 和相机提供数据用于观察，但没有接入默认导航融合。Gazebo 世界位姿仅供独立验收，不反馈导航定位。
-
-<details>
-<summary><strong>展开数据链路与验收边界</strong></summary>
-
-### 仓库导航与独立验收
-
-![仓库导航](docs/images/warehouse-navigation.svg)
-
-### 逐条传感器数据链
-
-![传感器数据链](docs/images/sensor-dataflow.svg)
-
-### TF 树与发布者
-
-![TF 发布关系](docs/images/tf-ownership.svg)
-
-</details>
-
-13 个包的职责、启动边界与源码位置见 [架构文档](docs/architecture.md)。
-
-## 建图与跟踪
-
-停止当前模式，再选择以下一项入口：
+终端 1：启动建图。将 `slam_toolbox` 替换为 `cartographer` 可切换后端。
 
 ```bash
-# 建图：遥控机器人探索场景
 bash scripts/demo.sh up mode:=slam slam_mode:=slam_toolbox gui:=true
-bash scripts/demo.sh up mode:=slam slam_mode:=cartographer gui:=true
-
-# 跟踪：独立控制器跟随预设路径
-bash scripts/demo.sh up mode:=tracking controller:=pure_pursuit gui:=true
-bash scripts/demo.sh up mode:=tracking controller:=stanley gui:=true
 ```
 
-建图不会自动驱动车辆。独立跟踪不包含全局规划或激光避障。Cartographer 当前关闭 IMU 输入。
+终端 2：加载环境并遥控机器人探索场景。
 
-SLAM 与跟踪使用 `/enable_emergency_stop`；`demo.sh estop/release` 面向导航模式。统一入口的 `use_rviz` 当前仅在导航模式生效。遥控、保存地图、路径配置与指标输出见 [维护指南](docs/development.md)。
+```bash
+source /opt/ros/jazzy/setup.bash
+source install-navcraft/local_setup.bash
+export ROS_DOMAIN_ID=73
+export ROS_AUTOMATIC_DISCOVERY_RANGE=LOCALHOST
+ros2 run navcraft_teleop keyboard_teleop_node --ros-args -p topic:=/teleop_cmd_vel
+```
 
-## 文档导航
+W/S 调整前进速度，A/D 调整转向速度，X 或空格停车，Q 停车并退出。**松开按键不会自动停车。** 建图算法本身不驱动车辆，也不提供遥控避障。停车并退出键盘遥控后，保持 SLAM 运行，在同一终端保存地图：
 
-| 阅读入口 | 内容 |
-|---|---|
-| [架构](docs/architecture.md) | 包职责、控制链与源码索引 |
-| [传感器与 TF](docs/sensors-and-tf.md) | 来源、频率、话题、消费者与坐标变换发布责任 |
-| [仓库演示](docs/warehouse-demo.md) | 路线、实体障碍与世界位姿到站检查 |
-| [开发与维护](docs/development.md) | 配置、可选入口、排错与清理 |
-| [验收记录](docs/validation.md) | 复现命令、带日期的结果与验证边界 |
-| [项目讲解](docs/project-guide.md) | 工程取舍与系统讲解路线 |
-| [许可与版本变更](docs/licensing.md) | 非商业许可、商业授权、历史 MIT 权利与第三方边界 |
+```bash
+bash scripts/save_map.sh my_map artifacts/maps
+```
 
-详细指南与图中文字目前为中文。[English](README.md) 提供相同的项目入口。
+输出为 `my_map.yaml` 和 `my_map.pgm`，不会自动切换 Nav2 的地图。Cartographer 当前关闭 IMU 输入。
 
-源码位于 `src/`，构建、演示与验收工具位于 `scripts/`。`docker/` 和 `.github/` 提供容器与 CI 定义。`build-navcraft/`、`install-navcraft/`、`log-navcraft/` 和 `artifacts/` 为本机生成目录，不进入 Git。
+### 3. 独立路径跟踪
 
-## 验证
+启动 Pure Pursuit；将 `pure_pursuit` 替换为 `stanley` 可切换控制器。
 
-验收范围为 **仿真与软件 mock**。`v0.1` 已记录的基线包括：
+```bash
+bash scripts/demo.sh up mode:=tracking controller:=pure_pursuit gui:=true
+```
 
-| 检查 | 已记录结果 |
-|---|---|
-| 工作区构建 | 13 包构建通过 |
-| colcon 测试 | 108 项，零失败 |
-| 任务与速度保护 | 37 项检查通过 |
-| 基础 Gazebo 导航与传感器 | 16 项检查通过 |
-| 仓库路线与障碍处理 | 26 项检查通过 |
+机器人启动后跟随 `odom` 坐标系下的 [预设路径](src/navcraft_evaluation/paths/demo_path.txt)。该模式**没有全局规划或激光避障**。采样写入 `/tmp/navcraft_tracking.csv`，正常退出时生成 `/tmp/navcraft_tracking.json` 汇总；输出路径和自定义路径配置见 [参数与入口](docs/development.md#参数与入口)。
 
-这些检查来自不同验证轮次，命令、日期、测量值与覆盖范围见 [validation.md](docs/validation.md)。构建后可复现：
+统一入口的 `use_rviz` 仅对导航生效。SLAM 与跟踪的急停服务是 `/enable_emergency_stop`；`demo.sh estop/release` 用于导航，详见 [模式与急停](docs/development.md#模式与急停)。
+
+## 开发与文档
+
+`src/` 存放 ROS 包，`scripts/` 存放构建、演示与验收工具。构建后可运行：
 
 ```bash
 python3 scripts/check_docs.py
 bash scripts/test.sh
-source /opt/ros/jazzy/setup.bash
-source install-navcraft/local_setup.bash
-ROS_DOMAIN_ID=187 python3 scripts/test_simulation.py
-ROS_DOMAIN_ID=188 python3 scripts/test_warehouse.py
 ```
 
-选择空闲 ROS 域，与正在运行的演示隔离。`bash scripts/validate.sh` 执行完整 13 组基线，仓库专用测试单独运行。
+| 文档 | 内容 |
+|---|---|
+| [架构](docs/architecture.md) | 包职责、控制链、传感器与 TF |
+| [开发与运行](docs/development.md) | 仓库演示、参数、可选底盘与故障排查 |
+| [验收记录](docs/validation.md) | 仿真复现命令、带日期的结果、证据与覆盖范围 |
+| [许可说明](docs/licensing.md) | 许可范围、商业授权与第三方通知 |
 
-### 当前边界
-
-- 轮式里程计与世界位置仍有明显偏离，不能作为到站真值。
-- 尚未完成 EKF 融合精度、全场景建图精度或公平的控制器性能排名。
-- Serial、UDP、mock、ros2_control 和 EKF 属于可选底盘入口；软件验收不能代替实车性能验证。
-- 门、电梯和充电桩属于场景资产；订单、车队调度、设施预约和自动充电工作流不在当前范围。
-- 托管 CI 自动执行构建、单元测试、Action 故障注入和 mock 底盘回归，各提交结果见 [Actions](https://github.com/Vitolearns/NavCraft/actions/workflows/ci.yml)。容器镜像实际运行尚未验证。
-
-## 参与贡献
-
-欢迎问题反馈与聚焦的改进。报告问题时请附环境、运行模式、复现命令、预期行为和相关日志。修改前阅读 [维护指南](docs/development.md)，按受影响模块执行必要检查，并同步相关文档。
-
-## 致谢
-
-NavCraft 基于 [ROS 2](https://www.ros.org/)、[Nav2](https://docs.nav2.org/)、[Gazebo](https://gazebosim.org/)、[SLAM Toolbox](https://github.com/SteveMacenski/slam_toolbox)、[Cartographer](https://github.com/ros2/cartographer)、[ros2_control](https://control.ros.org/) 与 [twist_mux](https://github.com/ros-teleop/twist_mux)。导航算法主要复用 Nav2，本仓库重点在系统集成、任务执行、速度保护、独立跟踪和可复现评估。
+验收范围为仿真与软件 mock，不代表实车性能、建图精度或控制器性能排名。项目聚焦单车导航，不包含车队调度、设施自动化或自动充电业务。
 
 ## 许可证
 
-NavCraft 原创内容采用 [PolyForm Noncommercial License 1.0.0](LICENSE)，SPDX 标识为 `PolyForm-Noncommercial-1.0.0`。这是包含非商业限制的源码可见许可，不属于 OSI 定义的开源许可证。
-
-允许的非商业用途、个人用途及教育、公共研究等机构的明确许可，以许可证全文为准。超出许可范围的商业用途须向 [维护者](https://github.com/Vitolearns) 取得单独书面授权，可先提交 [商业授权咨询](https://github.com/Vitolearns/NavCraft/issues/new?title=Commercial%20licensing%20inquiry)。
-
-第三方内容仍适用各自许可证。详见 [许可范围与版本历史](docs/licensing.md)、[许可变更记录](CHANGELOG.md) 和 [通知](NOTICE)。
+NavCraft 使用 [PolyForm Noncommercial 1.0.0](LICENSE) 源码可见许可。超出许可证允许范围的使用需单独书面授权。详见 [许可说明](docs/licensing.md) 与 [NOTICE](NOTICE)；第三方组件保留各自许可证。

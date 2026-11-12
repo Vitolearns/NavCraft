@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1800" height="2680" viewBox="0 0 1800 2680" role="img" aria-labelledby="title desc">
 <title id="title">NavCraft · 仓库导航、绕障与独立验收</title>
-<desc id="desc">激光感知 → 定位与代价地图 → Nav2 规划控制 → 速度保护 → Gazebo；真值只用于测量。详细职责与源码见 docs/architecture.md。</desc>
+<desc id="desc">激光、深度与融合里程计 → 定位与代价地图 → Nav2 规划控制 → 速度保护 → Gazebo；真值只用于测量。详细职责与源码见 docs/architecture.md。</desc>
 <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M 1 1 L 8 5 L 1 9" fill="none" stroke="#91999f" stroke-width="1.7"/></marker></defs>
 <rect width="1800" height="2680" fill="#fcfdff"/>
 <g font-family="Noto Sans CJK SC,Microsoft YaHei,Droid Sans Fallback,DejaVu Sans,sans-serif">
 <text x="900" y="55" font-size="34" font-weight="700" fill="#00569b" text-anchor="middle">NavCraft · 仓库导航、绕障与独立验收</text>
-<text x="900" y="96" font-size="21" font-weight="400" fill="#536c7f" text-anchor="middle">激光感知 → 定位与代价地图 → Nav2 规划控制 → 速度保护 → Gazebo；真值只用于测量</text>
+<text x="900" y="96" font-size="21" font-weight="400" fill="#536c7f" text-anchor="middle">激光、深度与融合里程计 → 定位与代价地图 → Nav2 规划控制 → 速度保护 → Gazebo；真值只用于测量</text>
 <rect x="380" y="1100" width="1050" height="545" rx="14" fill="#f5f7f9" stroke="#d9dfe4" stroke-width="2"/>
 <path d="M 240 275 L 240 380" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
 <path d="M 1480 275 L 1480 380" fill="none" stroke="#91999f" stroke-width="2.1" stroke-linejoin="round" marker-end="url(#arrow)"/>
@@ -42,11 +42,11 @@
 <text x="1480" y="204.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">warehouse 命令</text>
 <text x="1480" y="244.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">mission.py → /navigate_sequence</text>
 <rect x="80" y="380" width="320" height="145" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
-<text x="240" y="427.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">激光 /scan</text>
-<text x="240" y="467.5" font-size="18.3908" font-weight="400" fill="#00569b" text-anchor="middle">gpu_lidar → bridge → filter</text>
+<text x="240" y="427.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">激光与前向深度</text>
+<text x="240" y="467.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">/scan · /camera/scan</text>
 <text x="240" y="496.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">实时检测障碍表面</text>
 <rect x="480" y="380" width="350" height="145" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
-<text x="655" y="427.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">轮式 odom 与 TF</text>
+<text x="655" y="427.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">轮速 + IMU → EKF</text>
 <text x="655" y="467.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">/odom：控制用运动估计</text>
 <text x="655" y="496.5" font-size="18.5099" font-weight="400" fill="#00569b" text-anchor="middle">odom → base_footprint：定位输入</text>
 <rect x="900" y="380" width="300" height="145" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
@@ -60,11 +60,11 @@
 <rect x="50" y="690" width="400" height="190" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
 <text x="250" y="745.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">全局 / 局部代价地图</text>
 <text x="250" y="785.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">静态层 + 障碍层 + 膨胀层</text>
-<text x="250" y="814.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">/scan 标记与清除实时障碍</text>
+<text x="250" y="814.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">激光与深度扫描共同更新</text>
 <text x="250" y="843.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">全局 map 帧；局部 odom 滚动窗口</text>
 <rect x="520" y="690" width="400" height="190" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
 <text x="720" y="745.5" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">AMCL 定位</text>
-<text x="720" y="785.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">激光匹配已有地图</text>
+<text x="720" y="785.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">仅 /scan 匹配已有地图</text>
 <text x="720" y="814.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">经 TF 获取里程计运动</text>
 <text x="720" y="843.5" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">输出 map → odom</text>
 <rect x="1150" y="690" width="560" height="200" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
@@ -103,7 +103,7 @@
 <rect x="620" y="2290" width="520" height="130" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
 <text x="880" y="2330" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">Gazebo 差速机器人</text>
 <text x="880" y="2370" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">/cmd_vel → bridge → DiffDrive</text>
-<text x="880" y="2399" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">实际运动产生激光、odom 和 TF 反馈</text>
+<text x="880" y="2399" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">运动产生轮速、IMU、激光与深度观测</text>
 <rect x="1280" y="2290" width="450" height="130" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
 <text x="1505" y="2330" font-size="25" font-weight="700" fill="#00569b" text-anchor="middle">Gazebo 世界位姿</text>
 <text x="1505" y="2370" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">PosePublisher · 20 Hz</text>
@@ -120,7 +120,7 @@
 <text x="265" y="2507" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">世界位姿不反馈给导航</text>
 <text x="265" y="2536" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">warehouse 不自动放置障碍</text>
 <rect x="181" y="307" width="118" height="38" rx="19" fill="#f6fbff" stroke="#cfdeeb" stroke-width="1.7"/>
-<text x="240" y="333" font-size="21" font-weight="700" fill="#00569b" text-anchor="middle">激光检测</text>
+<text x="240" y="333" font-size="21" font-weight="700" fill="#00569b" text-anchor="middle">障碍观测</text>
 <text x="905" y="1139" font-size="25" font-weight="700" fill="#3d5568" text-anchor="middle">Nav2 导航：BT 调度、全局规划、路径跟随与恢复</text>
 <rect x="487" y="962" width="466" height="38" rx="19" fill="#f6fbff" stroke="#cfdeeb" stroke-width="1.7"/>
 <text x="720" y="988" font-size="20" font-weight="700" fill="#00569b" text-anchor="middle">地图中的机器人位姿：map → odom + odom TF</text>

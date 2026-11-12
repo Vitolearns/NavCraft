@@ -39,7 +39,7 @@
 <rect x="745" y="1260" width="310" height="155" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
 <text x="900" y="1314" font-size="23" font-weight="700" fill="#00569b" text-anchor="middle">camera_link</text>
 <text x="900" y="1351" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">xyz=(0.28, 0, 0.20) m</text>
-<text x="900" y="1380" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">无独立 optical frame</text>
+<text x="900" y="1380" font-size="19.6051" font-weight="400" fill="#00569b" text-anchor="middle">子帧 camera_optical_frame</text>
 <rect x="1095" y="1260" width="310" height="155" rx="25" fill="#e4f3ff" stroke="#cfdae3" stroke-width="2"/>
 <text x="1250" y="1314" font-size="23" font-weight="700" fill="#00569b" text-anchor="middle">caster_wheel</text>
 <text x="1250" y="1351" font-size="19.9713" font-weight="400" fill="#00569b" text-anchor="middle">xyz=(-0.20, 0, -0.035) m</text>
@@ -62,8 +62,8 @@
 <text x="1340" y="1778" font-size="21" font-weight="400" fill="#00569b" text-anchor="middle">轮式 odom 偏离需单独评价，不能以真值替换</text>
 <rect x="727.5" y="344" width="345" height="38" rx="19" fill="#f6fbff" stroke="#cfdeeb" stroke-width="1.7"/>
 <text x="900" y="370" font-size="20" font-weight="700" fill="#00569b" text-anchor="middle">map → odom：定位 / 建图二选一</text>
-<rect x="738" y="594" width="324" height="38" rx="19" fill="#f6fbff" stroke="#cfdeeb" stroke-width="1.7"/>
-<text x="900" y="620" font-size="20" font-weight="700" fill="#00569b" text-anchor="middle">gazebo_odom_tf_node · /tf</text>
+<rect x="576.5" y="594" width="647" height="38" rx="19" fill="#f6fbff" stroke="#cfdeeb" stroke-width="1.7"/>
+<text x="900" y="620" font-size="20" font-weight="700" fill="#00569b" text-anchor="middle">导航：navigation_ekf · 建图 / 跟踪：gazebo_odom_tf_node</text>
 <rect x="654" y="844" width="492" height="38" rx="19" fill="#f6fbff" stroke="#cfdeeb" stroke-width="1.7"/>
 <text x="900" y="870" font-size="20" font-weight="700" fill="#00569b" text-anchor="middle">robot_state_publisher · 固定 z = 0.075 m</text>
 <rect x="712" y="1137" width="376" height="38" rx="19" fill="#f6fbff" stroke="#cfdeeb" stroke-width="1.7"/>

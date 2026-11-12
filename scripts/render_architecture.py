@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reproduce the four source-audited architecture flowcharts with stdlib only.
+"""Generate the README cover and architecture diagrams with the standard library.
 
 Coordinates are intentional: retain the reference's top-down, rounded blue boxes,
 grey connectors and grouped modes. Labels are SVG text, not raster screenshots.
@@ -11,6 +11,10 @@ from html import escape
 from pathlib import Path
 import math
 import unicodedata
+import xml.etree.ElementTree as ET
+
+from generate_map import obstacles
+from warehouse_route import STATIONS
 
 ROOT = Path(__file__).resolve().parents[1]
 FONT = 'Noto Sans CJK SC,Microsoft YaHei,Droid Sans Fallback,DejaVu Sans,sans-serif'
@@ -106,80 +110,124 @@ class Diagram:
             '</g></svg>',''])
 
 
+def badge(label, value, color):
+    """A self-contained README badge. Text widths also fix the fallback font layout."""
+    left = math.ceil(units(label) * 12) + 16
+    right = math.ceil(units(value) * 12) + 16
+    width = left + right
+    title = escape(f'{label}: {value}')
+    return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="22" '
+            f'viewBox="0 0 {width} 22" role="img"><title>{title}</title>'
+            f'<clipPath id="clip"><rect width="{width}" height="22" rx="4"/></clipPath>'
+            f'<g clip-path="url(#clip)"><rect width="{left}" height="22" fill="#334453"/>'
+            f'<rect x="{left}" width="{right}" height="22" fill="{color}"/></g>'
+            '<g font-family="DejaVu Sans,Verdana,sans-serif" font-size="11" fill="white" '
+            'text-anchor="middle">'
+            f'<text x="{left/2:g}" y="15">{escape(label)}</text>'
+            f'<text x="{left+right/2:g}" y="15">{escape(value)}</text></g></svg>\n')
+
+
+def warehouse_cover():
+    """Draw the actual static collision footprints and six map-frame mission goals."""
+    world = ROOT/'src/navcraft_simulation/worlds/indoor_room.sdf.xacro'
+    svg = [
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 280" role="img" '
+        'aria-labelledby="title desc">',
+        '<title id="title">NavCraft · Warehouse navigation</title>',
+        '<desc id="desc">Six numbered mission stops on the simulated warehouse floor plan, '
+        'with positive map Y pointing up.</desc>',
+        '<defs><pattern id="grid" width="23" height="23" patternUnits="userSpaceOnUse">'
+        '<path d="M23 0H0V23" fill="none" stroke="#32485b" stroke-width="0.8"/>'
+        '</pattern></defs>',
+        '<rect width="1000" height="280" rx="15" fill="#101e2d"/>',
+        '<g font-family="DejaVu Sans,Arial,sans-serif">',
+        '<text x="38" y="100" font-size="64" font-weight="700" fill="#f6f8fa">NavCraft</text>',
+        '<text x="42" y="139" font-size="23" fill="#b9ccda">Warehouse navigation simulator</text>',
+        '<path d="M42 168H430" stroke="#3b5264"/>',
+        '<text x="42" y="202" font-size="17" fill="#76dfc4">Six-stop warehouse mission</text>',
+        '<text x="42" y="230" font-size="15" fill="#c4d3df">Known-map navigation · SLAM · Path tracking</text>',
+        '<g transform="translate(621 140)">',
+        '<rect x="-128" y="-128" width="256" height="256" rx="6" fill="url(#grid)" '
+        'stroke="#3b5264"/>',
+        '<g transform="scale(23 -23)" fill="#718999">',
+    ]
+    for x, y, width, height, yaw, _ in obstacles(world):
+        svg.append(f'<rect x="{-width/2:g}" y="{-height/2:g}" width="{width:g}" '
+                   f'height="{height:g}" transform="translate({x:g} {y:g}) '
+                   f'rotate({math.degrees(yaw):g})"/>')
+    svg.append('</g>')
+    for index, (_, (x, y)) in enumerate(STATIONS, 1):
+        svg.append(f'<circle cx="{23*x:g}" cy="{-23*y:g}" r="9" fill="#85e5c9" stroke="#101e2d"/>')
+        svg.append(f'<text x="{23*x:g}" y="{-23*y+4:g}" text-anchor="middle" '
+                   f'font-size="11" font-weight="700" fill="#132c31">{index}</text>')
+    svg += ['</g>', '<g transform="translate(777 48)">',
+            '<text font-size="12" letter-spacing="1.5" fill="#90a8ba">MISSION STOPS</text>']
+    for index, (name, _) in enumerate(STATIONS, 1):
+        y = 30 * index
+        svg.append(f'<text y="{y}" font-size="15" fill="#85e5c9">{index:02d}</text>')
+        svg.append(f'<text x="32" y="{y}" font-size="16" fill="#edf2f6">'
+                   f'{escape(name.replace("_", " ").title())}</text>')
+    svg += ['</g></g></svg>', '']
+    return '\n'.join(svg)
+
+
 def overview():
-    d=Diagram(1800,2200,'NavCraft · 单车导航与控制总体架构',
-              '保留完整仓库与单车能力；导航、建图、独立跟踪每次只启用一条控制链')
-    d.group(40,160,1010,455,'传感器：分别产生数据，不等于全部参与导航')
-    d.box(70,230,280,125,'激光雷达', ['gpu_lidar · 10 Hz','360 点 · 0.08–12 m'])
-    d.box(390,230,280,125,'IMU', ['imu · 100 Hz','姿态与惯性观测'])
-    d.box(710,230,300,125,'相机', ['15 Hz · 640×480','默认开启'])
-    d.box(70,440,280,130,'激光规范与过滤',['/sim/scan → /scan','lidar_link'])
-    d.box(390,440,280,130,'IMU 帧名适配',['/sim/imu → /imu/data','仅规范 imu_link'])
-    d.box(710,440,300,130,'图像桥接',['/sim/camera/image','无视觉处理节点'])
-    for x in [210,530,860]: d.edge([(x,355),(x,440)])
-    d.box(400,655,610,110,'IMU / 相机：观察与验收',['未接入默认 AMCL、Nav2 或两套 SLAM'])
-    d.edge([(530,570),(530,655)])
-    d.edge([(860,570),(860,655)])
-    d.box(1170,170,560,115,'演示入口 demo.sh',['up 启动；warehouse / run 才提交导航任务'])
-    d.box(1170,385,560,150,'启动编排 navcraft_bringup',
-          ['launch_demo.py → navcraft.launch.py','ROS 域锁 · Gazebo 分区 · 子进程回收'])
-    d.edge([(1450,285),(1450,385)])
-    d.box(70,820,350,145,'轮式里程计 /odom',['DiffDrive → odom 适配','输出平面位姿与速度'])
-    d.box(480,820,530,145,'TF 坐标关系',['odom → base_footprint + URDF 安装 TF','map → odom 由定位 / 建图分支负责'])
-    d.group(350,1100,1400,275,'')
-    d.note(1050,1366,'三种互斥运行模式：mode = navigation / slam / tracking',22)
-    d.box(390,1170,410,170,'导航模式',['有限航点任务 → AMCL + Nav2','激光、odom 与 TF；已有地图'])
-    d.box(850,1170,400,170,'建图模式',['SLAM Toolbox / Cartographer','激光 + odom / TF → /map','只建图；探索运动来自遥控'])
-    d.box(1300,1170,400,170,'独立跟踪模式',['Pure Pursuit / Stanley','/reference_path + /odom','无全局规划、无激光避障'])
-    # Launch selection uses its own upper routing lane.
-    for x in [730,1190,1630]:
-        d.edge([(1450,535),(1450,1005),(x,1005),(x,1170)],True)
-    d.pill(1450,720,'mode 三选一')
-    # Consumer data are split explicitly. TF is not an IMU/camera fusion path.
-    for x in [460,910]: d.edge([(210,570),(210,790),(50,790),(50,1040),(x,1040),(x,1170)])
-    d.pill(210,715,'/scan')
-    for x in [540,1010,1430]: d.edge([(245,965),(245,1060),(x,1060),(x,1170)])
-    for x in [630,1100]: d.edge([(745,965),(745,1080),(x,1080),(x,1170)])
-    d.box(390,1480,410,200,'导航速度保护\nnavcraft_safety',
-          ['RUNNING 状态 · 300 ms 新鲜度','锁存急停 /emergency_stop','限速 ±0.5 m/s、±1.2 rad/s'])
-    d.edge([(595,1340),(595,1480)])
-    d.pill(595,1420,'/nav2_cmd_vel + 状态',19)
-    d.box(850,1480,400,135,'人工遥控',['键盘 /teleop_cmd_vel','用于建图，也可接管独立跟踪'])
-    d.box(1300,1480,400,200,'实验仲裁与速度保护',
-          ['twist_mux → /muxed_cmd_vel','navcraft_teleop 速度门','急停 /enable_emergency_stop'])
-    d.edge([(1500,1340),(1500,1480)])
-    d.pill(1500,1420,'/tracking_cmd_vel',19)
-    d.edge([(1250,1548),(1300,1548)])
-    d.box(820,1810,700,110,'唯一最终速度输出 /cmd_vel',['导航门或实验门，按模式互斥发布'])
-    d.edge([(595,1680),(595,1740),(960,1740),(960,1810)])
-    d.edge([(1500,1680),(1500,1740),(1380,1740),(1380,1810)])
-    d.box(820,2000,700,135,'默认执行端：Gazebo 差速机器人',['ros_gz_bridge → DiffDrive → 车轮运动','Serial / UDP / mock / ros2_control 为独立替代入口'])
-    d.edge([(1170,1920),(1170,2000)])
-    d.box(70,1810,560,140,'RViz 可视化',['地图、定位、激光、全局路径与碰撞检查弧','默认统一入口仅导航分支使用 use_rviz'])
-    d.edge([(390,1250),(330,1250),(330,1810)])
-    d.edge([(820,2067),(25,2067),(25,400),(40,400)])
-    d.pill(340,2067,'仿真观测与运动反馈',20)
-    d.note(1060,1708,'SLAM 输出地图，人工遥控提供运动速度',19)
+    # Keep the README overview readable; detailed sensor/TF graphs live in docs.
+    d=Diagram(1440,1170,'NavCraft · 总体架构',
+              '三种模式互斥运行，共用 Gazebo 仓库与差速机器人')
+    d.box(440,130,560,110,'统一入口 · demo.sh up',
+          ['navcraft_bringup · mode 三选一'])
+    for x,title in [(40,'navigation · 已有地图导航'),
+                    (510,'slam · 激光建图'),
+                    (980,'tracking · 独立路径跟踪')]:
+        d.group(x,310,420,535,title)
+    for x in [250,720,1190]:
+        d.edge([(720,240),(720,275),(x,275),(x,310)],True)
+    d.box(60,370,380,135,'航点任务 · AMCL · Nav2',
+          ['地图 + 激光 + 融合里程计','激光 / 深度避障，执行航点任务'])
+    d.box(530,370,380,135,'SLAM Toolbox / Cartographer',
+          ['/scan + odom / TF → /map','只建图，不产生运动速度'])
+    d.box(1000,370,380,135,'Pure Pursuit / Stanley',
+          ['/reference_path + /odom','跟随预设路径，无自主避障'])
+    d.box(530,555,380,100,'键盘遥控', ['/teleop_cmd_vel'])
+    d.box(60,700,380,125,'导航速度保护',
+          ['navcraft_safety','任务状态 · 超时 · 急停'])
+    for x in [530,1000]:
+        d.box(x,700,380,125,'仲裁与速度保护',
+              ['twist_mux → navcraft_teleop','输入超时 · 急停'])
+    d.edge([(250,505),(250,700)])
+    d.pill(250,590,'/nav2_cmd_vel + 状态',18)
+    d.edge([(720,655),(720,700)])
+    d.edge([(1190,505),(1190,700)])
+    d.pill(1190,590,'/tracking_cmd_vel',19)
+    # Separate arrows converge only below the mutually exclusive modes.
+    for x in [250,720,1190]:
+        d.edge([(x,825),(x,885),(720,885),(720,955)])
+    d.pill(720,887,'/cmd_vel · 唯一最终发布者',21)
+    d.box(240,955,960,125,'Gazebo 仓库 · 差速机器人',
+          ['/cmd_vel → ros_gz_bridge → DiffDrive',
+           '导航反馈：轮速 + IMU → /odom · 激光 + 深度 → 代价地图'])
+    d.note(720,1118,'建图与独立跟踪使用轮式里程计。Serial / UDP / mock / ros2_control 另行启动。',19)
     return d.svg()
 
 
 def warehouse():
     d=Diagram(1800,2680,'NavCraft · 仓库导航、绕障与独立验收',
-              '激光感知 → 定位与代价地图 → Nav2 规划控制 → 速度保护 → Gazebo；真值只用于测量')
+              '激光、深度与融合里程计 → 定位与代价地图 → Nav2 规划控制 → 速度保护 → Gazebo；真值只用于测量')
     d.box(80,155,320,120,'放置实体障碍',['obstacle block / clear','或 test_warehouse.py 自动注入'])
     d.box(1250,155,460,120,'warehouse 命令',['mission.py → /navigate_sequence'])
-    d.box(80,380,320,145,'激光 /scan',['gpu_lidar → bridge → filter','实时检测障碍表面'])
-    d.box(480,380,350,145,'轮式 odom 与 TF',['/odom：控制用运动估计','odom → base_footprint：定位输入'])
+    d.box(80,380,320,145,'激光与前向深度',['/scan · /camera/scan','实时检测障碍表面'])
+    d.box(480,380,350,145,'轮速 + IMU → EKF',['/odom：控制用运动估计','odom → base_footprint：定位输入'])
     d.box(900,380,300,145,'静态仓库地图',['map_server → /map','由场景碰撞几何生成'])
     d.box(1250,380,460,145,'六站路线 warehouse_route.py',
           ['receiving → storage B → storage A','packing → dock 接近点 → home'])
     d.edge([(240,275),(240,380)])
-    d.pill(240,330,'激光检测')
+    d.pill(240,330,'障碍观测')
     d.edge([(1480,275),(1480,380)])
     d.box(50,690,400,190,'全局 / 局部代价地图',
-          ['静态层 + 障碍层 + 膨胀层','/scan 标记与清除实时障碍','全局 map 帧；局部 odom 滚动窗口'])
+          ['静态层 + 障碍层 + 膨胀层','激光与深度扫描共同更新','全局 map 帧；局部 odom 滚动窗口'])
     d.box(520,690,400,190,'AMCL 定位',
-          ['激光匹配已有地图','经 TF 获取里程计运动','输出 map → odom'])
+          ['仅 /scan 匹配已有地图','经 TF 获取里程计运动','输出 map → odom'])
     d.box(1150,690,560,200,'航点执行器 navcraft_mission',
           ['顺序派发 · 有限重试 · 超时处理','暂停 / 恢复 / 取消 · 迟到回调收尾','下层结果未知 → FAULT，拒绝新任务'])
     d.edge([(200,525),(200,690)])
@@ -220,7 +268,7 @@ def warehouse():
     d.edge([(1600,1850),(1600,1915),(1410,1915),(1410,1970)])
     d.edge([(1610,890),(1610,1705),(1760,1705),(1760,1885),(1320,1885),(1320,1970)])
     d.pill(1610,1620,'/execution_state',20)
-    d.box(620,2290,520,130,'Gazebo 差速机器人',['/cmd_vel → bridge → DiffDrive','实际运动产生激光、odom 和 TF 反馈'])
+    d.box(620,2290,520,130,'Gazebo 差速机器人',['/cmd_vel → bridge → DiffDrive','运动产生轮速、IMU、激光与深度观测'])
     d.edge([(1045,2165),(1045,2230),(880,2230),(880,2290)])
     d.pill(1045,2230,'唯一最终输出 /cmd_vel',20)
     d.box(1280,2290,450,130,'Gazebo 世界位姿',['PosePublisher · 20 Hz','/model/mobile_robot/pose'])
@@ -247,15 +295,15 @@ def sensor_dataflow():
          '定位、代价地图与建图',['AMCL / Nav2 / 两套 SLAM','也供 RViz 与仿真检查']),
         ('IMU',['100 Hz','姿态、角速度、线加速度'],
          'ros_gz_bridge',['/sim/imu','sensor_msgs/Imu'],
-         'imu_filter_node',['只改 frame_id 并转发','/imu/data · imu_link'],
-         '观察与传感器验收',['默认不做惯性融合','没有去噪 / 偏置估计 / EKF']),
-        ('相机 camera',['15 Hz · 640×480','水平 FOV 1.2 rad'],
-         'ros_gz_bridge',['/sim/camera/image','sensor_msgs/Image'],
-         '图像消息直达 ROS',['camera_link','没有视觉处理节点'],
-         '图像观察与帧检查',['无 CameraInfo 桥接','未接入视觉 SLAM / 识别']),
+         'imu_filter_node',['规范帧，补全未知角速度方差','/imu/data · imu_link'],
+         '默认导航 EKF',['偏航角速度 + 轮式速度','/odom 与 odom TF']),
+        ('RGB-D 相机',['15 Hz · 640×480','水平 FOV 1.2 rad'],
+         'ros_gz_bridge',['深度图 + CameraInfo','RGB 预览 /sim/camera/image'],
+         'depthimage_to_laserscan',['中心扫描带 → /camera/scan','平面扫描帧 camera_link'],
+         'Nav2 障碍层',['前向深度与激光共同更新','全局 / 局部代价地图']),
         ('轮式里程计 DiffDrive',['轮半径 0.075 m','轮距 0.43 m'],
          'ros_gz_bridge',['/model/mobile_robot/odometry','nav_msgs/Odometry'],
-         'gazebo_odom_tf_node',['平面投影 → /odom','发布 odom → base_footprint'],
+         'gazebo_odom_tf_node',['导航 → /wheel/odom → EKF','建图 / 跟踪 → /odom 与 TF'],
          '运动估计与坐标反馈',['Nav2 / Cartographer / 独立跟踪','AMCL、SLAM Toolbox 经 TF 使用']),
         ('仿真时钟',['Gazebo simulation time','非墙钟 / 非到站真值'],
          'ros_gz_bridge',['/clock','rosgraph_msgs/Clock'],
@@ -272,7 +320,7 @@ def sensor_dataflow():
         for j,x in enumerate([50,460,880,1370]):
             d.box(x,y+15,[330,350,380,380][j],175,row[j*2],row[j*2+1],small=True)
         for a,b in [(380,460),(810,880),(1260,1370)]:d.edge([(a,y+102),(b,y+102)])
-    d.box(200,1930,1400,155,'可选 EKF：独立 hardware_ekf.launch.py，默认仿真不启动',
+    d.box(200,1930,1400,155,'可选硬件入口 · hardware_ekf.launch.py',
           ['/wheel/odom + /imu/data → robot_localization/ekf_node → /odom 与 odom TF',
            '启用时关闭原始底盘 odom / TF 发布；不能与 Gazebo odom 适配叠加'],optional=True)
     return d.svg()
@@ -287,14 +335,14 @@ def tf_ownership():
     d.pill(900,367,'map → odom：定位 / 建图二选一',20)
     d.box(650,690,500,110,'base_footprint',['底盘在地面上的投影坐标系'])
     d.edge([(900,550),(900,690)])
-    d.pill(900,617,'gazebo_odom_tf_node · /tf',20)
+    d.pill(900,617,'导航：navigation_ekf · 建图 / 跟踪：gazebo_odom_tf_node',20)
     d.box(650,940,500,110,'base_link',['机器人实体参考系'])
     d.edge([(900,800),(900,940)])
     d.pill(900,867,'robot_state_publisher · 固定 z = 0.075 m',20)
     children=[
         (45,310,'lidar_link',['xyz=(0.18, 0, 0.27) m','固定安装 · /tf_static']),
         (395,310,'imu_link',['xyz=(0, 0, 0.22) m','固定安装 · /tf_static']),
-        (745,310,'camera_link',['xyz=(0.28, 0, 0.20) m','无独立 optical frame']),
+        (745,310,'camera_link',['xyz=(0.28, 0, 0.20) m','子帧 camera_optical_frame']),
         (1095,310,'caster_wheel',['xyz=(-0.20, 0, -0.035) m','固定安装 · /tf_static']),
         (1445,310,'left / right_wheel',['可动轮关节 · /tf','当前 joint_states 供显示']),
     ]
@@ -313,7 +361,14 @@ def tf_ownership():
 
 
 def outputs():
-    return {'architecture-overview.svg':overview(),
+    version = ET.parse(ROOT/'src/navcraft_simulation/package.xml').findtext('version')
+    return {'badge-ros.svg': badge('ROS 2', 'Jazzy', '#315b7a'),
+            'badge-gazebo.svg': badge('Gazebo', 'Harmonic', '#99570c'),
+            'badge-ubuntu.svg': badge('Ubuntu', '24.04', '#ad4429'),
+            'badge-version.svg': badge('version', 'v' + version, '#26695e'),
+            'badge-license.svg': badge('license', 'PolyForm Noncommercial 1.0.0', '#64518d'),
+            'warehouse-cover.svg':warehouse_cover(),
+            'architecture-overview.svg':overview(),
             'warehouse-navigation.svg':warehouse(),
             'sensor-dataflow.svg':sensor_dataflow(),
             'tf-ownership.svg':tf_ownership()}
@@ -334,7 +389,7 @@ def main():
     if stale:
         print('Missing/stale SVGs: '+', '.join(stale))
         return 1
-    print('PASS: four architecture SVGs '+('match source.' if args.check else 'generated.'))
+    print('PASS: documentation SVGs '+('match source.' if args.check else 'generated.'))
     return 0
 
 

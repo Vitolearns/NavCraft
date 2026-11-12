@@ -28,6 +28,8 @@ def check_links(errors):
         # Inline links/images and explicit reference definitions used by this repo.
         targets = re.findall(r'!?\[[^\]\n]*\]\(\s*(<[^>]+>|[^\s)]+)', text)
         targets += re.findall(r'^\s*\[[^\]]+\]:\s*(<[^>]+>|\S+)', text, flags=re.M)
+        # The centered README header uses HTML links and repository-hosted badges.
+        targets += re.findall(r'<(?:a|img)\b[^>]*?\b(?:href|src)="([^"]+)"', text, flags=re.I)
         for target in targets:
             url = urlsplit(target.strip('<>'))
             if url.scheme or url.netloc or not url.path:
