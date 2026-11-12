@@ -1,3 +1,4 @@
+#include <array>
 #include <memory>
 #include <string>
 
@@ -12,6 +13,7 @@ class ImuFilterNode final : public rclcpp::Node {
     input_topic_ = declare_parameter<std::string>("input_topic", "/sim/imu");
     output_topic_ = declare_parameter<std::string>("output_topic", "/imu/data");
     frame_id_ = declare_parameter<std::string>("frame_id", "imu_link");
+    angular_velocity_variance_ = declare_parameter<double>("angular_velocity_variance_if_unknown", 0.0);
     sub_ = create_subscription<sensor_msgs::msg::Imu>(
         input_topic_, 10, [this](sensor_msgs::msg::Imu::SharedPtr msg) { Filter(*msg); });
     pub_ = create_publisher<sensor_msgs::msg::Imu>(output_topic_, 10);
@@ -27,6 +29,13 @@ class ImuFilterNode final : public rclcpp::Node {
  private:
   void Filter(sensor_msgs::msg::Imu imu) {
     imu.header.frame_id = frame_id_;
+    // The all-zero matrix means unknown. Preserve reported covariance and the
+    // ROS -1 sentinel for an unavailable angular velocity measurement.
+    if (angular_velocity_variance_ > 0.0 && imu.angular_velocity_covariance == std::array<double, 9>{}) {
+      for (const auto diagonal : {0, 4, 8}) {
+        imu.angular_velocity_covariance[diagonal] = angular_velocity_variance_;
+      }
+    }
     pub_->publish(imu);
     diagnostics_.force_update();
   }
@@ -34,6 +43,7 @@ class ImuFilterNode final : public rclcpp::Node {
   std::string input_topic_;
   std::string output_topic_;
   std::string frame_id_;
+  double angular_velocity_variance_;
   rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr sub_;
   rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr pub_;
   diagnostic_updater::Updater diagnostics_;

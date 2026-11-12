@@ -5,9 +5,7 @@ import os
 import subprocess
 
 
-def move_obstacle(block):
-    # Fixed position ahead of home -> receiving; never teleport the robot.
-    x, y, z = (-1.5, 0.0, 0.375) if block else (0.0, 0.0, -2.0)
+def set_obstacle_pose(x, y, z):
     env = dict(os.environ)
     env.setdefault('GZ_PARTITION', 'navcraft-' + env.get('ROS_DOMAIN_ID', '73'))
     response = subprocess.run([
@@ -18,6 +16,12 @@ def move_obstacle(block):
     ], env=env, text=True, capture_output=True, timeout=10)
     if response.returncode or 'data: true' not in response.stdout:
         raise RuntimeError('Gazebo obstacle move failed: ' + response.stdout + response.stderr)
+
+
+def move_obstacle(block):
+    # Fixed position ahead of home -> receiving; never teleport the robot.
+    position = (-1.5, 0.0, 0.375) if block else (0.0, 0.0, -2.0)
+    set_obstacle_pose(*position)
     print('Obstacle ' + ('placed at (-1.5, 0)' if block else 'cleared'), flush=True)
 
 

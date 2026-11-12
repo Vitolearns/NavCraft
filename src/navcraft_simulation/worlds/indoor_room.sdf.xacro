@@ -3,6 +3,8 @@
   <xacro:arg name="geometry_file" default=""/>
   <xacro:arg name="simulation_physics_file" default=""/>
   <xacro:arg name="simulation_media_directory" default=""/>
+  <xacro:arg name="enable_depth" default="false"/>
+  <xacro:property name="use_rgbd" value="${'$(arg enable_depth)'.lower() == 'true'}"/>
   <xacro:property name="geometry_file_path" value="$(arg geometry_file)"/>
   <xacro:property name="simulation_physics_file_path" value="$(arg simulation_physics_file)"/>
   <xacro:property name="simulation_media_path" value="$(arg simulation_media_directory)"/>
@@ -997,13 +999,16 @@
             <always_on>true</always_on>
           </sensor>
           <xacro:if value="${sim_sensors['camera']['enabled']}">
-            <sensor name="camera" type="camera">
+            <sensor name="camera" type="${'rgbd_camera' if use_rgbd else 'camera'}">
               <pose>${sensors['camera']['xyz_m'][0]} ${sensors['camera']['xyz_m'][1]} ${sensors['camera']['xyz_m'][2]} ${sensors['camera']['rpy_rad'][0]} ${sensors['camera']['rpy_rad'][1]} ${sensors['camera']['rpy_rad'][2]}</pose>
-              <topic>${camera_topic}</topic>
+              <topic>${camera_topic if use_rgbd else camera_topic + '/image'}</topic>
               <gz_frame_id>${sensors['camera']['frame_id']}</gz_frame_id>
               <update_rate>${sim_sensors['camera']['update_rate_hz']}</update_rate>
               <always_on>true</always_on>
               <camera>
+                <xacro:if value="${use_rgbd}">
+                  <optical_frame_id>camera_optical_frame</optical_frame_id>
+                </xacro:if>
                 <horizontal_fov>${sim_sensors['camera']['horizontal_fov_rad']}</horizontal_fov>
                 <image>
                   <width>${sim_sensors['camera']['image_width_px']}</width>
@@ -1073,7 +1078,7 @@
       cmd_vel_topic="/cmd_vel"
       odom_topic="/model/mobile_robot/odometry"
       odom_frame="odom" base_frame="base_link"
-      scan_topic="/sim/scan" imu_topic="/sim/imu" camera_topic="/sim/camera/image"/>
+      scan_topic="/sim/scan" imu_topic="/sim/imu" camera_topic="/sim/camera"/>
 
     <gui fullscreen="0">
       <!-- 默认观察机位：场景斜上方俯视 ~40°，对准房间中心，避免每次手动转视角 -->

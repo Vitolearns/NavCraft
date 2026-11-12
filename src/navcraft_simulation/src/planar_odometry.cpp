@@ -1,5 +1,6 @@
 #include "navcraft_simulation/planar_odometry.hpp"
 
+#include <array>
 #include <cmath>
 
 #include "tf2/LinearMath/Matrix3x3.hpp"
@@ -44,6 +45,13 @@ nav_msgs::msg::Odometry ProjectOdometryToPlanarFootprint(
   nav_msgs::msg::Odometry output = input;
   output.header.frame_id = odom_frame;
   output.child_frame_id = base_frame;
+  // Gazebo DiffDrive leaves covariance unspecified. Use simulation noise weights
+  // for the measured axes and preserve covariance from any richer input.
+  if (output.twist.covariance == std::array<double, 36>{}) {
+    output.twist.covariance[0] = 0.0025;   // longitudinal (m/s)^2
+    output.twist.covariance[7] = 0.0025;   // lateral (m/s)^2
+    output.twist.covariance[35] = 0.0225;  // wheel yaw rate (rad/s)^2
+  }
   output.pose.pose.position.z = 0.0;
   output.pose.pose.orientation = PlanarQuaternion(input.pose.pose.orientation);
   return output;

@@ -14,7 +14,8 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument('gui', default_value='true'),
         DeclareLaunchArgument('use_rviz', default_value='true'),
-        include('navcraft_simulation', 'sim.launch.py', {'gui': LaunchConfiguration('gui')}),
+        include('navcraft_simulation', 'sim.launch.py', {
+            'gui': LaunchConfiguration('gui'), 'navigation_fusion': 'true'}),
         include('navcraft_navigation', 'nav.launch.py', {'use_sim_time': 'true'}),
         include('navcraft_navigation', 'map_manager.launch.py', {}),
         Node(package='navcraft_mission', executable='navigate_sequence_server_node',

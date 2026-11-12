@@ -95,7 +95,7 @@ def main():
         m=result(costmap.call_async(GetCostmap.Request())).map
         assert m.header.frame_id == 'odom', m.header.frame_id
         info=m.metadata
-        # Lidar marks the visible box surface, not necessarily its hidden centre.
+        # Both range sensors mark the visible box surface.
         for row in range(info.size_y):
             y=info.origin.position.y+(row+.5)*info.resolution
             if abs(y)>.32: continue
@@ -131,7 +131,7 @@ def main():
         move_obstacle(True)
         inserted=time.monotonic()
         wait(obstacle_marked,30)
-        check('lidar obstacle appears in local costmap',True)
+        check('inserted obstacle appears in local costmap',True)
         def detour():
             return any(t>inserted and len(p)>5 and min(math.hypot(x+1.5,y) for x,y in p)>.40
                        and any(abs(x+1.5)<.35 and abs(y)>.40 for x,y in p) for t,p in plans)

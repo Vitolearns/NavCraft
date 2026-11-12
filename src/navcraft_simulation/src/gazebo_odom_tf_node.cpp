@@ -16,7 +16,9 @@ class GazeboOdomTfNode final : public rclcpp::Node {
     base_frame_ = declare_parameter<std::string>("base_frame", "base_footprint");
 
     odom_pub_ = create_publisher<nav_msgs::msg::Odometry>(output_topic_, 10);
-    tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(*this);
+    if (declare_parameter<bool>("publish_tf", true)) {
+      tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(*this);
+    }
     odom_sub_ = create_subscription<nav_msgs::msg::Odometry>(
         input_topic_, 10, [this](nav_msgs::msg::Odometry::SharedPtr msg) { Publish(*msg); });
   }
@@ -26,6 +28,9 @@ class GazeboOdomTfNode final : public rclcpp::Node {
     const auto odom = navcraft_simulation::ProjectOdometryToPlanarFootprint(
         input, odom_frame_, base_frame_);
     odom_pub_->publish(odom);
+    if (!tf_broadcaster_) {
+      return;
+    }
 
     geometry_msgs::msg::TransformStamped transform;
     transform.header = odom.header;
