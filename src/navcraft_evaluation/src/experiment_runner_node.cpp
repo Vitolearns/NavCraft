@@ -7,7 +7,7 @@
 #include <string>
 
 #include "rclcpp/rclcpp.hpp"
-#include "navcraft_interfaces/msg/navigation_statistics.hpp"
+#include "navcraft_interfaces/msg/tracking_statistics.hpp"
 #include "navcraft_interfaces/msg/tracking_error.hpp"
 
 using namespace std::chrono_literals;
@@ -28,7 +28,7 @@ class ExperimentRunnerNode final : public rclcpp::Node {
     tracking_sub_ = create_subscription<navcraft_interfaces::msg::TrackingError>(
         "/tracking_error", 50,
         [this](navcraft_interfaces::msg::TrackingError::SharedPtr msg) { OnTrackingError(*msg); });
-    stats_pub_ = create_publisher<navcraft_interfaces::msg::NavigationStatistics>(
+    stats_pub_ = create_publisher<navcraft_interfaces::msg::TrackingStatistics>(
         "/experiment/statistics", 10);
     timer_ = create_wall_timer(1s, [this]() { PublishStatistics(); });
   }
@@ -75,16 +75,13 @@ class ExperimentRunnerNode final : public rclcpp::Node {
   }
 
   void PublishStatistics() {
-    navcraft_interfaces::msg::NavigationStatistics stats;
+    navcraft_interfaces::msg::TrackingStatistics stats;
     stats.header.stamp = now();
-    stats.total_goals = static_cast<int>(samples_);
-    stats.succeeded_goals = static_cast<int>(samples_);
-    stats.failed_goals = 0;
-    stats.success_rate = samples_ == 0 ? 0.0 : 1.0;
-    stats.total_distance_m = sum_abs_lateral_error_;
-    stats.last_navigation_time_s = samples_ == 0 ? 0.0 : sum_abs_heading_error_ / samples_;
-    stats.mean_navigation_time_s = stats.last_navigation_time_s;
-    stats.recovery_count = 0;
+    stats.controller_name = samples_ == 0 ? controller_name_ : last_controller_name_;
+    stats.samples = samples_;
+    stats.mean_abs_lateral_error_m = samples_ == 0 ? 0.0 : sum_abs_lateral_error_ / samples_;
+    stats.mean_abs_heading_error_rad = samples_ == 0 ? 0.0 : sum_abs_heading_error_ / samples_;
+    stats.last_nearest_path_index = last_nearest_path_index_;
     stats_pub_->publish(stats);
   }
 
@@ -128,7 +125,7 @@ class ExperimentRunnerNode final : public rclcpp::Node {
   int last_nearest_path_index_ = -1;
   std::string last_controller_name_ = "unknown";
   rclcpp::Subscription<navcraft_interfaces::msg::TrackingError>::SharedPtr tracking_sub_;
-  rclcpp::Publisher<navcraft_interfaces::msg::NavigationStatistics>::SharedPtr stats_pub_;
+  rclcpp::Publisher<navcraft_interfaces::msg::TrackingStatistics>::SharedPtr stats_pub_;
   rclcpp::TimerBase::SharedPtr timer_;
 };
 

@@ -2,6 +2,21 @@
 
 环境：Ubuntu 24.04 / ROS 2 Jazzy / Gazebo Harmonic。构建使用 Jazzy underlay；生成目录为 `build-navcraft/`、`install-navcraft/`、`log-navcraft/` 和 `artifacts/`。
 
+## 跟踪评估修复（2026-11-12）
+
+在 `cb03ac2` 基础上修正了两种独立跟踪器的实际速度记录，并为评估话题增加专用
+`TrackingStatistics` 消息。`actual_speed` 取最新里程计的纵向测量速度，保留正负号；
+到达终点并发出零指令时仍报告测量值。统计话题只报告样本数和带单位的误差均值，
+不再把采样数、误差值解释成导航目标数、行程或耗时。接口迁移说明见
+[跟踪评估数据](development.md#跟踪评估数据)。
+
+- [速度回归](../src/navcraft_tracking/test/test_tracking_speed.launch.py)：两种跟踪器均覆盖静止、前进、倒退，以及终点零指令与非零实测速度并存的情形。
+- [统计与导出回归](../src/navcraft_evaluation/test/test_tracking_statistics.launch.py)：检查零样本状态、已知样本的计数和绝对误差均值，并核对正常退出后的 CSV 与 JSON。
+- 13 包构建通过。域 211 执行 `scripts/test.sh`：115 项 colcon 测试通过，0 错误、失败或跳过；37 项任务与速度保护检查通过。
+- 域 212 / 213 分别执行 `test_modes.py gazebo_pure_pursuit` / `gazebo_stanley`，各 6 项通过，包含运动、唯一最终速度发布者、急停指令与底盘停稳。
+
+证据目录为 `artifacts/fix-tracking-metrics-20261112/`。本轮未重跑默认导航、SLAM 和完整底盘矩阵；未改动控制律及导航参数。
+
 ## 默认导航传感器融合（2026-11-12）
 
 运行代码为 `021d129`。在本地 Jazzy / Gazebo Harmonic 环境使用隔离 ROS 域验证。

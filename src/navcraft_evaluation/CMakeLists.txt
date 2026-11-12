@@ -21,4 +21,9 @@ install(TARGETS experiment_runner_node
 install(DIRECTORY paths
   DESTINATION share/${PROJECT_NAME})
 
+if(BUILD_TESTING)
+  find_package(launch_testing_ament_cmake REQUIRED)
+  add_launch_test(test/test_tracking_statistics.launch.py TIMEOUT 60)
+endif()
+
 ament_package()

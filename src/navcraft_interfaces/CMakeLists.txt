@@ -12,6 +12,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "action/NavigateSequence.action"
   "srv/SetChassisMode.srv"
   "msg/TrackingError.msg"
+  "msg/TrackingStatistics.msg"
   "msg/RobotState.msg"
   "msg/ChassisState.msg"
   "msg/NavigationStatistics.msg"

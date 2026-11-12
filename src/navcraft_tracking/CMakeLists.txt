@@ -35,6 +35,8 @@ install(DIRECTORY include/
 
 if(BUILD_TESTING)
   find_package(ament_cmake_gtest REQUIRED)
+  find_package(launch_testing_ament_cmake REQUIRED)
+  add_launch_test(test/test_tracking_speed.launch.py TIMEOUT 60)
   ament_add_gtest(tracking_math_test test/tracking_math_test.cpp)
   target_include_directories(tracking_math_test PRIVATE include)
 endif()

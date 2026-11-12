@@ -111,6 +111,28 @@ bash scripts/demo.sh up mode:=tracking controller:=stanley \
 
 更换 path_file 使用独立 [tracking.launch.py](../src/navcraft_bringup/launch/tracking.launch.py)，统一入口当前不转发此参数。独立入口需自行保证底盘、时钟和域一致，以及唯一速度发布者；不要同时运行完整 demo。参数先用 `ros2 launch <包> <文件> --show-args` 核实。
 
+### 跟踪评估数据
+
+`/tracking_error` 与 CSV 的 `actual_speed` 是最新 `/odom` 消息中车体坐标系下的
+`twist.twist.linear.x`（m/s，保留正负号）。`target_speed` 是配置的纵向目标速度；
+指令被急停门阻断或到达终点时，实际速度仍按里程计记录，不用指令值或强制零值代替。
+
+`/experiment/statistics` 使用 `navcraft_interfaces/msg/TrackingStatistics`：
+
+| 字段 | 含义 |
+|---|---|
+| `samples` | 评估节点启动以来收到的跟踪误差样本数 |
+| `mean_abs_lateral_error_m` | 横向绝对误差的样本均值，单位 m |
+| `mean_abs_heading_error_rad` | 航向绝对误差的样本均值，单位 rad |
+| `controller_name` / `last_nearest_path_index` | 最新样本的控制器名称 / 最近路径点索引 |
+
+没有样本时，均值为 0、索引为 -1，应同时检查 `samples`。这些均值按消息样本加权，
+不是时间积分、行驶距离或导航成功率。CSV 列名及 JSON 的 `samples`、
+`mean_abs_lateral_error`、`mean_abs_heading_error` 等字段保持不变；JSON 的误差单位分别为 m、rad。
+
+此前该话题误用 `NavigationStatistics`。已有订阅者需改用 `TrackingStatistics` 并重新构建；
+导航统计消息类型仍保留，但跟踪评估不再向其中填入无关数据。
+
 ## 故障排查
 
 | 现象 | 检查和处理 |

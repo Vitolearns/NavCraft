@@ -60,7 +60,7 @@ class PurePursuitControllerNode final : public rclcpp::Node {
     if (navcraft_tracking::IsFinalWaypointReached(
             nearest_index, path_->poses.size(), distance_to_goal, goal_tolerance_)) {
       cmd_pub_->publish(geometry_msgs::msg::Twist{});
-      PublishError(nearest_index, lateral_error, 0.0, 0.0);
+      PublishError(nearest_index, lateral_error, 0.0);
       return;
     }
 
@@ -77,7 +77,7 @@ class PurePursuitControllerNode final : public rclcpp::Node {
     cmd.angular.z = std::clamp(target_speed_ * curvature, -max_angular_speed_, max_angular_speed_);
     cmd_pub_->publish(cmd);
 
-    PublishError(nearest_index, lateral_error, heading_error, cmd.linear.x);
+    PublishError(nearest_index, lateral_error, heading_error);
   }
 
   size_t SelectTargetIndex(const int nearest_index, const double x, const double y,
@@ -103,14 +103,14 @@ class PurePursuitControllerNode final : public rclcpp::Node {
   }
 
   void PublishError(const int nearest_index, const double lateral_error,
-                    const double heading_error, const double speed) {
+                    const double heading_error) {
     navcraft_interfaces::msg::TrackingError error;
     error.header.stamp = now();
     error.header.frame_id = path_->header.frame_id;
     error.lateral_error = lateral_error;
     error.heading_error = heading_error;
     error.target_speed = target_speed_;
-    error.actual_speed = speed;
+    error.actual_speed = odom_->twist.twist.linear.x;
     error.nearest_path_index = nearest_index;
     error.controller_name = "pure_pursuit";
     error_pub_->publish(error);

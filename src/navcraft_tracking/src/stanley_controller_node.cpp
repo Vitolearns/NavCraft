@@ -50,7 +50,7 @@ class StanleyControllerNode final : public rclcpp::Node {
     if (navcraft_tracking::IsFinalWaypointReached(
             nearest_index, path_->poses.size(), distance_to_goal, goal_tolerance_)) {
       cmd_pub_->publish(geometry_msgs::msg::Twist{});
-      PublishError(nearest_index, lateral_error, heading_error, 0.0);
+      PublishError(nearest_index, lateral_error, heading_error);
       return;
     }
 
@@ -61,19 +61,18 @@ class StanleyControllerNode final : public rclcpp::Node {
     cmd.angular.z = std::clamp(steer, -max_angular_speed_, max_angular_speed_);
     cmd_pub_->publish(cmd);
 
-    PublishError(nearest_index, lateral_error, heading_error, cmd.linear.x);
+    PublishError(nearest_index, lateral_error, heading_error);
   }
 
   void PublishError(
-      const int nearest_index, const double lateral_error, const double heading_error,
-      const double speed) {
+      const int nearest_index, const double lateral_error, const double heading_error) {
     navcraft_interfaces::msg::TrackingError error;
     error.header.stamp = now();
     error.header.frame_id = path_->header.frame_id;
     error.lateral_error = lateral_error;
     error.heading_error = heading_error;
     error.target_speed = target_speed_;
-    error.actual_speed = speed;
+    error.actual_speed = odom_->twist.twist.linear.x;
     error.nearest_path_index = nearest_index;
     error.controller_name = "stanley";
     error_pub_->publish(error);
